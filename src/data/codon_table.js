@@ -1,4 +1,4 @@
-{
+const data = {
   "1": {
     "U": ["Phe", "Leu", "Ser", "Tyr", "Stop", "Cys", "Trp"],
     "C": ["Leu", "Pro", "His", "Gln", "Arg"],
@@ -95,4 +95,6 @@
     "GGA": ["Gly"],
     "GGG": ["Gly"]
   }
-}
+};
+
+export default data;

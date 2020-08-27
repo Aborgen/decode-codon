@@ -1,4 +1,4 @@
-{
+const data = {
   "Ala": "Alanine",
   "Arg": "Arginine",
   "Asn": "Asparagine",
@@ -19,4 +19,6 @@
   "Trp": "Tryptophan",
   "Tyr": "Tyrosine",
   "Val": "Valine"
-}
+};
+
+export default data;
