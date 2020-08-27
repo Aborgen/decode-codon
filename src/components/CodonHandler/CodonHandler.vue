@@ -1,5 +1,5 @@
 <template>
-  <div class='codon-handler'>
+<div class='codon-handler'>
   <header class='codon-instruction'>Codon Insertion</header>
   <span class='codon-pad'>- - -</span>
   <section class='codon-display'>
@@ -16,7 +16,7 @@
       :data-codon-value="codon"
       class='codon-button'>{{ codon }}</button>
   </section>
-  </div>
+</div>
 </template>
 
 <script>
