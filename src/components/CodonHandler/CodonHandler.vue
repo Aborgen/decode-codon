@@ -19,36 +19,72 @@
 </div>
 </template>
 
-<script>
-import codonTable from 'data/codon_table.js';
+<script lang='ts'>
+import codonTable from 'data/codon_table.ts';
 
-function ensureIndexIntegrity() {
+function ensureIndexIntegrity(this: any) : void {
   if (this.currentCodonIdx > 3 || this.currentCodonIdx < 1) {
     this.currentCodonIdx = 1;
   }
+
+  return;
 }
 
-function selectCodonByTextInsertion(e) {
-  const currentCodon = document.getElementById(`codon-${this.currentCodonIdx}`);
+function selectCodonByTextInsertion(this: any, e: KeyboardEvent) : void {
   this.ensureIndexIntegrity();
-  if (e.target === currentCodon) {
+  if (!(e.target instanceof HTMLInputElement)) {
+    return;
+  }
+
+  let codonName:string = `codon-${this.currentCodonIdx}`;
+  let codon:HTMLInputElement = document.getElementById(codonName) as HTMLInputElement;
+  if (!codon) {
+    return;
+  }
+  else if (e.target === codon) {
     ++this.currentCodonIdx;
   }
   else {
-    this.currentCodonIdx = Number.parseInt(e.target.dataset.codonId) + 1;
+    this.currentCodonIdx = Number.parseInt(e.target.dataset.codonId || '0') + 1;
   }
 
   this.ensureIndexIntegrity();
-  document.getElementById(`codon-${this.currentCodonIdx}`).select();
+  codonName = `codon-${this.currentCodonIdx}`;
+  codon = document.getElementById(codonName) as HTMLInputElement;
+  if (!codon) {
+    return;
+  }
+
+  codon.select();
+  return;
 }
 
-function selectCodonByButton(e) {
+function selectCodonByButton (this: any, e: MouseEvent) : void {
   this.ensureIndexIntegrity();
-  const codon = document.getElementById(`codon-${this.currentCodonIdx}`);
-  codon.value = e.target.dataset.codonValue;
+
+  let codonName:string = `codon-${this.currentCodonIdx}`;
+  let codon:HTMLInputElement = document.getElementById(codonName) as HTMLInputElement;
+  if (!codon) {
+    return;
+  }
+
+  const button:HTMLButtonElement = e.target as HTMLButtonElement;
+  if (!button) {
+    return;
+  }
+
+  codon.value = button.dataset.codonValue as string;
   ++this.currentCodonIdx;
+
   this.ensureIndexIntegrity();
-  document.getElementById(`codon-${this.currentCodonIdx}`).select();
+  codonName = `codon-${this.currentCodonIdx}`;
+  codon = document.getElementById(codonName) as HTMLInputElement;
+  if (!codon) {
+    return;
+  }
+
+  codon.select();
+  return;
 }
 
 export default {
