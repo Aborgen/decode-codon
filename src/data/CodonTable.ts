@@ -1,11 +1,11 @@
-const data = {
-  "1": {
+const data: any = {
+  1: {
     "U": ["Phe", "Leu", "Ser", "Tyr", "Stop", "Cys", "Trp"],
     "C": ["Leu", "Pro", "His", "Gln", "Arg"],
     "A": ["Ile", "Thr", "Asn", "Lys", "Ser", "Arg"],
     "G": ["Ala", "Asp", "Glu", "Gly", "Val"]
   },
-  "2": {
+  2: {
     "UU": ["Phe", "Leu"],
     "UC": ["Ser"],
     "UA": ["Tyr", "Stop"],
@@ -26,7 +26,7 @@ const data = {
     "GA": ["Asp", "Glu"],
     "GG": ["Gly"]
   },
-  "3": {
+  3: {
     "UUU": ["Phe"],
     "UUC": ["Phe"],
     "UUA": ["Leu"],
