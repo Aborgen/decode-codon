@@ -2,104 +2,149 @@
 <div class='codon-handler'>
   <header class='codon-instruction'>Codon Insertion</header>
   <span class='codon-pad'>- - -</span>
-  <section class='codon-display'>
+  <section class='base-display'>
     <input required v-for="n in 3"
-      @input="selectCodonByTextInsertion"
-      :id="'codon-'+n"
-      :data-codon-id="n"
-      class='codon-insert'
-      pattern='[uUcCaAgG]{1}'></input>
+      @click="$event.target.select()"
+      @input="selectBaseByTextInsertion"
+      :id="'base-'+n"
+      :data-base-id="n"
+      class='base-insert'
+      pattern='[uUcCaAgG]{1}'
+      maxlength=1></input>
   </section>
-  <section class='codon-action'>
-    <button v-for="codon in ['U', 'C', 'A', 'G']"
-      @click="selectCodonByButton"
-      :data-codon-value="codon"
-      class='codon-button'>{{ codon }}</button>
+  <section class='base-action'>
+    <button v-for="base in ['U', 'C', 'A', 'G']"
+      @click="selectBaseByButton"
+      :data-base-value="base"
+      class='base-button'>{{ base }}</button>
   </section>
 </div>
 </template>
 
 <script lang='ts'>
-import codonTable from 'data/codon_table.ts';
+import { Codon } from 'types/Codon.ts';
 
-function ensureIndexIntegrity(this: any) : void {
-  if (this.currentCodonIdx > 3 || this.currentCodonIdx < 1) {
-    this.currentCodonIdx = 1;
+function maybeSubmitCodon(this: any) : void {
+  let codon:Codon = "";
+  for (let [_, base] of Object.entries(this.bases)) {
+    // Only submit bases when all three have been input
+    if (base === "") {
+      return;
+    }
+
+    codon += base;
   }
 
-  return;
+  this.onCodonSubmit(codon);
+  this.resetInputs();
+} 
+
+function resetInputs(this: any) : void {
+  const inputs:NodeListOf<HTMLInputElement> = document.querySelectorAll('.base-insert');
+  inputs.forEach((input:HTMLInputElement) => {
+    input.value = "";
+    if (typeof input.dataset.baseId !== 'string') {
+      throw 'We\'ve got series problems... data-base-id has somehow been unset';
+    }
+  
+    this.bases[input.dataset.baseId] = "";
+  });
 }
 
-function selectCodonByTextInsertion(this: any, e: KeyboardEvent) : void {
-  this.ensureIndexIntegrity();
+function getNextEmptyInput(this: any) : HTMLInputElement | null {
+  const inputs:NodeListOf<HTMLInputElement> = document.querySelectorAll('.base-insert');
+  if (!inputs) {
+    return null;
+  }
+
+  let nextInput:HTMLInputElement = inputs[0];
+  for (let i = 0; i < inputs.length; ++i) {
+    if (inputs[i].value === "" || inputs[i].validity.patternMismatch) {
+      nextInput = inputs[i];
+      break;
+    }
+  }
+
+  return nextInput;
+}
+
+function pushBase(this: any, baseId: string, base: string) : void {
+  if (typeof baseId !== 'string' || !(/^[1-3]{1}$/.test(baseId))) {
+    throw 'baseId has been corrupted:\nElement === ${e.target} Accepted numbers in dataset.baseId === [1,2,3]';
+  }
+  else if (typeof base !== 'string') {
+    throw `base input incorrect: {${base}} should be either U, C, A, or G`;
+  }
+
+  this.bases[baseId] = base;
+}
+
+function selectBaseByTextInsertion(this: any, e: KeyboardEvent) : void {
   if (!(e.target instanceof HTMLInputElement)) {
     return;
   }
-
-  let codonName:string = `codon-${this.currentCodonIdx}`;
-  let codon:HTMLInputElement = document.getElementById(codonName) as HTMLInputElement;
-  if (!codon) {
-    return;
-  }
-  else if (e.target === codon) {
-    ++this.currentCodonIdx;
-  }
-  else {
-    this.currentCodonIdx = Number.parseInt(e.target.dataset.codonId || '0') + 1;
-  }
-
-  this.ensureIndexIntegrity();
-  codonName = `codon-${this.currentCodonIdx}`;
-  codon = document.getElementById(codonName) as HTMLInputElement;
-  if (!codon) {
+  else if (e.target.validity.patternMismatch) {
+    // animateShake();
+    e.target.select();
     return;
   }
 
-  codon.select();
-  return;
+  e.target.value = e.target.value.toUpperCase();
+  this.pushBase(e.target.dataset.baseId, e.target.value);
+  this.maybeSubmitCodon();
+  const nextInput:HTMLInputElement = this.getNextEmptyInput();
+  if (!nextInput) {
+    return;
+  }
+
+  nextInput.select();
 }
 
-function selectCodonByButton (this: any, e: MouseEvent) : void {
-  this.ensureIndexIntegrity();
-
-  let codonName:string = `codon-${this.currentCodonIdx}`;
-  let codon:HTMLInputElement = document.getElementById(codonName) as HTMLInputElement;
-  if (!codon) {
+function selectBaseByButton (this: any, e: MouseEvent) : void {
+  if (!(e.target instanceof HTMLButtonElement)) {
     return;
   }
 
-  const button:HTMLButtonElement = e.target as HTMLButtonElement;
-  if (!button) {
+  let nextInput:HTMLInputElement = this.getNextEmptyInput();
+  if (!nextInput) {
     return;
   }
 
-  codon.value = button.dataset.codonValue as string;
-  ++this.currentCodonIdx;
-
-  this.ensureIndexIntegrity();
-  codonName = `codon-${this.currentCodonIdx}`;
-  codon = document.getElementById(codonName) as HTMLInputElement;
-  if (!codon) {
+  nextInput.value = e.target.dataset.baseValue as string;
+  this.pushBase(nextInput.dataset.baseId, nextInput.value);
+  this.maybeSubmitCodon();
+  nextInput = this.getNextEmptyInput();
+  if (!nextInput) {
     return;
   }
 
-  codon.select();
-  return;
+  nextInput.select();
 }
 
 export default {
   name: 'CodonHandler',
   data() {
     return {
-      codonTable: codonTable,
-      codons: [],
-      currentCodonIdx: 1
+      bases: {
+        "1": "",
+        "2": "",
+        "3": ""
+      }
     };
   },
   methods: {
-    selectCodonByButton,
-    selectCodonByTextInsertion,
-    ensureIndexIntegrity
+    getNextEmptyInput,
+    maybeSubmitCodon,
+    pushBase,
+    resetInputs,
+    selectBaseByButton,
+    selectBaseByTextInsertion
+  },
+  props: {
+    onCodonSubmit: {
+      type: Function,
+      required: true
+    }
   }
 };
 </script>
@@ -121,7 +166,7 @@ export default {
   align-self: center;
 }
 
-.codon-display {
+.base-display {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
@@ -129,7 +174,7 @@ export default {
   font-size: 1.8rem;
 }
 
-.codon-insert {
+.base-insert {
   height: 3rem;
   width: 3rem;
   background: #3571a614;
@@ -137,7 +182,7 @@ export default {
   text-align: center;
 }
 
-.codon-action {
+.base-action {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -150,7 +195,7 @@ export default {
   box-sizing: border-box;
 }
 
-.codon-button {
+.base-button {
   width: 3.3rem;
   height: 4rem;
   text-align: center;
