@@ -7,8 +7,6 @@
 </template>
 
 <script lang='ts'>
-import AminoAcidKey from 'data/amino_acid_key.ts'
-
 export default {
   name: 'AminoAcidDisplay',
   props: {
