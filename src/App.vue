@@ -2,28 +2,39 @@
 <div class='app'>
   <div class='app-container'>
     <amino-acid-display
-      :amino-acid-chain="aminoAcidChain"
-      :codon-chain="codonChain" />
-    <codon-handler />
+      :amino-acid-chain="aminoAcidData.getAllAminoAcids()"
+      :codon-chain="aminoAcidData.getAllCodons()"
+    />
+    <codon-handler
+      :on-codon-submit="pushCodon"
+    />
   </div>
 </div>
 </template>
 
-<script>
+<script lang='ts'>
+import AminoAcidData from 'types/AminoAcidData.ts';
 import AminoAcidDisplay from 'components/AminoAcidDisplay/AminoAcidDisplay.vue';
 import CodonHandler from 'components/CodonHandler/CodonHandler.vue';
+
+function pushCodon(this: any, codon: any) : void {
+  this.aminoAcidData.pushCodon(codon);
+  console.log(this.aminoAcidData.getAllAminoAcids());
+}
 
 export default {
   name: 'app',
   data() {
     return {
-      aminoAcidChain: [],
-      codonChain: []
+      aminoAcidData: new AminoAcidData()
     }
   },
   components: {
     AminoAcidDisplay,
     CodonHandler
+  },
+  methods: {
+    pushCodon
   }
 };
 </script>
