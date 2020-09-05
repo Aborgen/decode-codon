@@ -1,7 +1,12 @@
 <template>
 <div class='codon-handler'>
   <header class='codon-instruction'>Codon Insertion</header>
-  <span class='codon-pad'>- - -</span>
+  <section class='amino-acid-choices'>
+    <ul>
+      <li v-for="aminoAcid in possibleAminoAcids"
+        class='amino-acid-option'>{{ aminoAcid }}</li>
+    </ul>
+  </section>
   <section class='base-display'>
     <input required v-for="n in 3"
       @click="$event.target.select()"
@@ -23,11 +28,12 @@
 
 <script lang='ts'>
 import { Codon } from 'types/Codon.ts';
+import CodonTable from 'data/CodonTable.ts';
 
 function maybeSubmitCodon(this: any) : void {
   let codon:Codon = "";
   for (let [_, base] of Object.entries(this.bases)) {
-    // Only submit bases when all three have been input
+    // Only submit codon when all three have been input
     if (base === "") {
       return;
     }
@@ -38,6 +44,24 @@ function maybeSubmitCodon(this: any) : void {
   this.onCodonSubmit(codon);
   this.resetInputs();
 } 
+
+function updateAminoAcid(this: any) : void {
+  let bases: string = "";
+  for (let [i, base] of Object.entries(this.bases)) {
+    if (typeof base !== 'string') {
+      throw `Garbage value found in base ${i}: ${base}`;
+    }
+
+    bases += base;
+  }
+
+  const idx = bases.length;
+  if (idx === 0) {
+    return;
+  }
+
+  this.possibleAminoAcids = CodonTable[idx][bases];
+}
 
 function resetInputs(this: any) : void {
   const inputs:NodeListOf<HTMLInputElement> = document.querySelectorAll('.base-insert');
@@ -77,6 +101,7 @@ function pushBase(this: any, baseId: string, base: string) : void {
   }
 
   this.bases[baseId] = base;
+  this.updateAminoAcid();
 }
 
 function selectBaseByTextInsertion(this: any, e: KeyboardEvent) : void {
@@ -129,7 +154,8 @@ export default {
         "1": "",
         "2": "",
         "3": ""
-      }
+      },
+      possibleAminoAcids: []
     };
   },
   methods: {
@@ -138,7 +164,8 @@ export default {
     pushBase,
     resetInputs,
     selectBaseByButton,
-    selectBaseByTextInsertion
+    selectBaseByTextInsertion,
+    updateAminoAcid
   },
   props: {
     onCodonSubmit: {
@@ -202,6 +229,33 @@ export default {
   line-height: 4rem;
   padding: 0;
   font-size: 2rem;
+}
 
+.amino-acid-choices {
+  padding: 0.3em;
+  padding-top: 0;
+  margin: 0;
+}
+
+.amino-acid-choices ul {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.6em;
+  margin: 0;
+  padding: 0;
+}
+
+.amino-acid-option {
+  flex: 25%;
+  max-width: 6em;
+  background: orange;
+  display: inline-block;
+  border-radius: 5rem;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 </style>
