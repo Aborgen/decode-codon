@@ -19,7 +19,7 @@ const data: any = {
     "AU": ["Ile", "Met"],
     "AC": ["Thr"],
     "AA": ["Asn", "Lys"],
-    "AG": ["Ser, Arg"],
+    "AG": ["Ser", "Arg"],
 
     "GU": ["Val"],
     "GC": ["Ala"],
