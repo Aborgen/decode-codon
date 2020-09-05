@@ -18,7 +18,8 @@ const data = {
   "Thr": "Threonine",
   "Trp": "Tryptophan",
   "Tyr": "Tyrosine",
-  "Val": "Valine"
+  "Val": "Valine",
+  "Stop": "Stop"
 };
 
 export default data;
