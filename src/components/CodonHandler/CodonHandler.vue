@@ -18,10 +18,17 @@
       maxlength=1></input>
   </section>
   <section class='base-action'>
-    <button v-for="base in ['U', 'C', 'A', 'G']"
-      @click="selectBaseByButton"
-      :data-base-value="base"
-      class='base-button'>{{ base }}</button>
+    <div class='base-button-group'>
+      <button v-for="base in ['U', 'C', 'A', 'G']"
+        @click="selectBaseByButton"
+        :data-base-value="base"
+        class='base-button'>{{ base }}</button>
+    </div>
+    <div class='base-options-group'>
+      <button
+        @click="maybeSubmitCodon"
+        class='codon-commit'>commit</button>
+    </div>
   </section>
 </div>
 </template>
@@ -29,6 +36,11 @@
 <script lang='ts'>
 import { Codon } from 'types/Codon.ts';
 import CodonTable from 'data/CodonTable.ts';
+
+enum EMode {
+  AUTO,
+  MANUAL
+}
 
 function maybeSubmitCodon(this: any) : void {
   let codon:Codon = "";
@@ -43,6 +55,7 @@ function maybeSubmitCodon(this: any) : void {
 
   this.onCodonSubmit(codon);
   this.resetInputs();
+  this.possibleAminoAcids = [];
 } 
 
 function updateAminoAcid(this: any) : void {
@@ -81,7 +94,7 @@ function getNextEmptyInput(this: any) : HTMLInputElement | null {
     return null;
   }
 
-  let nextInput:HTMLInputElement = inputs[0];
+  let nextInput:HTMLInputElement | null= null;
   for (let i = 0; i < inputs.length; ++i) {
     if (inputs[i].value === "" || inputs[i].validity.patternMismatch) {
       nextInput = inputs[i];
@@ -137,7 +150,10 @@ function selectBaseByButton (this: any, e: MouseEvent) : void {
 
   nextInput.value = e.target.dataset.baseValue as string;
   this.pushBase(nextInput.dataset.baseId, nextInput.value);
-  this.maybeSubmitCodon();
+  if (this.mode === EMode.AUTO) {
+    this.maybeSubmitCodon();
+  }
+
   nextInput = this.getNextEmptyInput();
   if (!nextInput) {
     return;
@@ -155,6 +171,7 @@ export default {
         "2": "",
         "3": ""
       },
+      mode: EMode.MANUAL,
       possibleAminoAcids: []
     };
   },
@@ -186,13 +203,6 @@ export default {
   padding: 0.5rem;
 }
 
-.codon-instruction {
-}
-
-.codon-pad {
-  align-self: center;
-}
-
 .base-display {
   display: flex;
   flex-flow: row wrap;
@@ -211,8 +221,9 @@ export default {
 
 .base-action {
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  justify-content: space-around;
   background: #3571a638;
   margin-top: 1rem;
   border-width: 0 0.5rem;
@@ -220,6 +231,12 @@ export default {
   border-color: #b3dbff;
   border-radius: 0.1rem;
   box-sizing: border-box;
+}
+
+.base-button-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .base-button {
@@ -231,7 +248,20 @@ export default {
   font-size: 2rem;
 }
 
+.base-options-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.codon-commit {
+  height: 3rem;
+  width: 6rem;
+  margin: auto;
+}
+
 .amino-acid-choices {
+  min-height: 1.6em;
   padding: 0.3em;
   padding-top: 0;
   margin: 0;
