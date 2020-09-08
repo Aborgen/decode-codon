@@ -28,6 +28,10 @@
       <button
         @click="maybeSubmitCodon"
         class='codon-commit'>commit</button>
+      <button
+        @click="toggleMode"
+        :class="{'codon-mode-auto': isModeAuto()}"
+        class='codon-mode-toggle'>auto</button>
     </div>
   </section>
 </div>
@@ -40,6 +44,19 @@ import CodonTable from 'data/CodonTable.ts';
 enum EMode {
   AUTO,
   MANUAL
+}
+
+function isModeAuto(this: any) : boolean {
+  return this.mode === EMode.AUTO;
+}
+
+function toggleMode(this: any) : void {
+  if (this.mode === EMode.AUTO) {
+    this.mode = EMode.MANUAL;
+  }
+  else {
+    this.mode = EMode.AUTO;
+  }
 }
 
 function maybeSubmitCodon(this: any) : void {
@@ -177,11 +194,13 @@ export default {
   },
   methods: {
     getNextEmptyInput,
+    isModeAuto,
     maybeSubmitCodon,
     pushBase,
     resetInputs,
     selectBaseByButton,
     selectBaseByTextInsertion,
+    toggleMode,
     updateAminoAcid
   },
   props: {
@@ -257,7 +276,16 @@ export default {
 .codon-commit {
   height: 3rem;
   width: 6rem;
-  margin: auto;
+}
+
+.codon-mode-toggle {
+  height: 3rem;
+  width: 6rem;
+}
+
+.codon-mode-auto {
+  background: grey;
+  border: 3px double #eaff85;
 }
 
 .amino-acid-choices {
