@@ -180,7 +180,10 @@ function selectBaseByTextInsertion(this: any, e: KeyboardEvent) : void {
 
   e.target.value = e.target.value.toUpperCase();
   this.pushBase(e.target.dataset.baseId, e.target.value);
-  this.maybeSubmitCodon();
+  if (this.mode === EMode.AUTO) {
+    this.maybeSubmitCodon();
+  }
+
   const nextInput:HTMLInputElement = this.getNextEmptyInput();
   if (!nextInput) {
     return;
