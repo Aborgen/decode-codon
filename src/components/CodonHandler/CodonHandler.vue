@@ -89,10 +89,10 @@ function toggleMode(this: any) : void {
 }
 
 function maybeSubmitCodon(this: any) : void {
-  let codon:Codon = "";
+  let codon:string = '';
   for (let [_, base] of Object.entries(this.bases)) {
     // Only submit codon when all three have been input
-    if (base === "") {
+    if (base === '') {
       return;
     }
 
@@ -106,7 +106,7 @@ function maybeSubmitCodon(this: any) : void {
 } 
 
 function updateAminoAcid(this: any) : void {
-  let bases: string = "";
+  let bases:string = '';
   for (let [i, base] of Object.entries(this.bases)) {
     if (typeof base !== 'string') {
       throw `Garbage value found in base ${i}: ${base}`;
@@ -126,12 +126,12 @@ function updateAminoAcid(this: any) : void {
 function resetInputs(this: any) : void {
   const inputs:NodeListOf<HTMLInputElement> = document.querySelectorAll('.base-insert');
   inputs.forEach((input:HTMLInputElement) => {
-    input.value = "";
+    input.value = '';
     if (typeof input.dataset.baseId !== 'string') {
       throw 'We\'ve got series problems... data-base-id has somehow been unset';
     }
   
-    this.bases[input.dataset.baseId] = "";
+    this.bases[input.dataset.baseId] = '';
   });
 }
 
@@ -141,9 +141,9 @@ function getNextEmptyInput(this: any) : HTMLInputElement | null {
     return null;
   }
 
-  let nextInput:HTMLInputElement | null= null;
+  let nextInput:HTMLInputElement | null = null;
   for (let i = 0; i < inputs.length; ++i) {
-    if (inputs[i].value === "" || inputs[i].validity.patternMismatch) {
+    if (inputs[i].value === '' || inputs[i].validity.patternMismatch) {
       nextInput = inputs[i];
       break;
     }
@@ -215,9 +215,9 @@ export default {
   data() {
     return {
       bases: {
-        "1": "",
-        "2": "",
-        "3": ""
+        '1': '',
+        '2': '',
+        '3': ''
       },
       currentlySelectedInput: null,
       mode: EMode.MANUAL,
