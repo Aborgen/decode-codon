@@ -201,6 +201,7 @@ function selectBaseByButton (this: any, e: MouseEvent) : void {
     this.maybeSubmitCodon();
   }
 
+  // this.lockBaseInputBlur is invoked during the value button's mousedown and touchstart events
   this.unlockBaseInputBlur();
   nextInput = this.getNextEmptyInput();
   if (!nextInput) {
