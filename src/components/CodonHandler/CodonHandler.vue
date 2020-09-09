@@ -109,9 +109,19 @@ function maybeSubmitCodon(this: any) : void {
 
 function updateAminoAcids(this: any) : void {
   let bases:string = '';
+  let hasEmptyInput:boolean = false;
   for (let [i, base] of Object.entries(this.bases)) {
     if (typeof base !== 'string') {
       throw `Garbage value found in base ${i}: ${base}`;
+    }
+    else if (base === '') {
+      hasEmptyInput = true;
+    }
+    // There cannot be gaps in the inputs: e.g. A _ G, _ _ A, _ C U.
+    // Valid patterns are: A _ _, U A _, U A G, _ _ _
+    else if (hasEmptyInput && base !== '') {
+      this.possibleAminoAcids = ['?'];
+      return;
     }
 
     bases += base;
