@@ -35,6 +35,9 @@
         @click="toggleMode"
         :class="{'codon-mode-auto': isModeAuto()}"
         class='codon-mode-toggle'>auto</button>
+      <button
+        @click="resetInputs"
+        class='codon-clear'>x</button>
     </div>
   </section>
 </div>
@@ -101,7 +104,6 @@ function maybeSubmitCodon(this: any) : void {
 
   this.onCodonSubmit(codon);
   this.resetInputs();
-  this.possibleAminoAcids = [];
   this.maybeResetSelectedInput();
 } 
 
@@ -133,6 +135,8 @@ function resetInputs(this: any) : void {
   
     this.bases[input.dataset.baseId] = '';
   });
+
+  this.possibleAminoAcids = [];
 }
 
 function getNextEmptyInput(this: any) : HTMLInputElement | null {
