@@ -332,14 +332,21 @@ export default {
   justify-content: center;
 }
 
-.codon-commit {
+.base-options-group button {
   height: 3rem;
   width: 6rem;
 }
 
-.codon-mode-toggle {
-  height: 3rem;
-  width: 6rem;
+.codon-commit {}
+
+.codon-mode-toggle {}
+
+.codon-clear {
+  height: 2rem !important;
+  width: 3rem !important;
+  text-align: center;
+  font-size: 0.7em;
+  padding: 0;
 }
 
 .codon-mode-auto {
