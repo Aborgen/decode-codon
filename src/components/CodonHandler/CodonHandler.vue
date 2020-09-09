@@ -156,7 +156,7 @@ function pushBase(this: any, baseId: string, base: string) : void {
   if (typeof baseId !== 'string' || !(/^[1-3]{1}$/.test(baseId))) {
     throw 'baseId has been corrupted:\nElement === ${e.target} Accepted numbers in dataset.baseId === [1,2,3]';
   }
-  else if (typeof base !== 'string') {
+  else if (typeof base !== 'string' || !(/^[UCAG]{1}$/.test(base))) {
     throw `base input incorrect: {${base}} should be either U, C, A, or G`;
   }
 
