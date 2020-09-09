@@ -9,7 +9,8 @@
   </section>
   <section class='base-display'>
     <input required v-for="n in 3"
-      @click="$event.target.select()"
+      @click="selectedInput($event.target)"
+      @blur="maybeResetSelectedInput"
       @input="selectBaseByTextInsertion"
       :id="'base-'+n"
       :data-base-id="n"
@@ -20,6 +21,8 @@
   <section class='base-action'>
     <div class='base-button-group'>
       <button v-for="base in ['U', 'C', 'A', 'G']"
+        @mousedown="lockBaseInputBlur"
+        @touchstart="lockBaseInputBlur"
         @click="selectBaseByButton"
         :data-base-value="base"
         class='base-button'>{{ base }}</button>
@@ -44,6 +47,32 @@ import CodonTable from 'data/CodonTable.ts';
 enum EMode {
   AUTO,
   MANUAL
+}
+
+// Keeping track of the currently selected input allows the user to click on an input, and then change it by clicking one of the buttons
+function selectedInput(this: any, input: HTMLInputElement) : void {
+  if (!(input instanceof HTMLInputElement)) {
+    return;
+  }
+
+  this.currentlySelectedInput = input;
+  input.select();
+}
+
+function lockBaseInputBlur(this: any) : void {
+  this.blurLocked = true;
+}
+
+function unlockBaseInputBlur(this: any) : void {
+  this.blurLocked = false;
+}
+
+function maybeResetSelectedInput(this: any) : void {
+  if (this.blurLocked) {
+    return;
+  }
+
+  this.currentlySelectedInput = null;
 }
 
 function isModeAuto(this: any) : boolean {
@@ -73,6 +102,7 @@ function maybeSubmitCodon(this: any) : void {
   this.onCodonSubmit(codon);
   this.resetInputs();
   this.possibleAminoAcids = [];
+  this.maybeResetSelectedInput();
 } 
 
 function updateAminoAcid(this: any) : void {
@@ -140,7 +170,7 @@ function selectBaseByTextInsertion(this: any, e: KeyboardEvent) : void {
   }
   else if (e.target.validity.patternMismatch) {
     // animateShake();
-    e.target.select();
+    this.selectedInput(e.target);
     return;
   }
 
@@ -152,7 +182,7 @@ function selectBaseByTextInsertion(this: any, e: KeyboardEvent) : void {
     return;
   }
 
-  nextInput.select();
+  this.selectedInput(nextInput);
 }
 
 function selectBaseByButton (this: any, e: MouseEvent) : void {
@@ -160,7 +190,7 @@ function selectBaseByButton (this: any, e: MouseEvent) : void {
     return;
   }
 
-  let nextInput:HTMLInputElement = this.getNextEmptyInput();
+  let nextInput:HTMLInputElement = this.currentlySelectedInput || this.getNextEmptyInput();
   if (!nextInput) {
     return;
   }
@@ -171,12 +201,13 @@ function selectBaseByButton (this: any, e: MouseEvent) : void {
     this.maybeSubmitCodon();
   }
 
+  this.unlockBaseInputBlur();
   nextInput = this.getNextEmptyInput();
   if (!nextInput) {
     return;
   }
 
-  nextInput.select();
+  this.selectedInput(nextInput);
 }
 
 export default {
@@ -188,6 +219,7 @@ export default {
         "2": "",
         "3": ""
       },
+      currentlySelectedInput: null,
       mode: EMode.MANUAL,
       possibleAminoAcids: []
     };
@@ -195,13 +227,17 @@ export default {
   methods: {
     getNextEmptyInput,
     isModeAuto,
+    lockBaseInputBlur,
     maybeSubmitCodon,
     pushBase,
+    maybeResetSelectedInput,
     resetInputs,
     selectBaseByButton,
     selectBaseByTextInsertion,
+    selectedInput,
     toggleMode,
-    updateAminoAcid
+    unlockBaseInputBlur,
+    updateAminoAcid,
   },
   props: {
     onCodonSubmit: {
