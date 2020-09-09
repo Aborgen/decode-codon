@@ -107,7 +107,7 @@ function maybeSubmitCodon(this: any) : void {
   this.maybeResetSelectedInput();
 } 
 
-function updateAminoAcid(this: any) : void {
+function updateAminoAcids(this: any) : void {
   let bases:string = '';
   for (let [i, base] of Object.entries(this.bases)) {
     if (typeof base !== 'string') {
@@ -165,7 +165,7 @@ function pushBase(this: any, baseId: string, base: string) : void {
   }
 
   this.bases[baseId] = base;
-  this.updateAminoAcid();
+  this.updateAminoAcids();
 }
 
 function selectBaseByTextInsertion(this: any, e: KeyboardEvent) : void {
@@ -242,7 +242,7 @@ export default {
     selectedInput,
     toggleMode,
     unlockBaseInputBlur,
-    updateAminoAcid,
+    updateAminoAcids,
   },
   props: {
     onCodonSubmit: {
