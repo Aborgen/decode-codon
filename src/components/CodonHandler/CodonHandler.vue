@@ -104,7 +104,6 @@ function maybeSubmitCodon(this: any) : void {
 
   this.onCodonSubmit(codon);
   this.resetInputs();
-  this.maybeResetSelectedInput();
 } 
 
 function updateAminoAcids(this: any) : void {
@@ -147,6 +146,7 @@ function resetInputs(this: any) : void {
   });
 
   this.possibleAminoAcids = [];
+  this.maybeResetSelectedInput();
 }
 
 function getNextEmptyInput(this: any) : HTMLInputElement | null {
