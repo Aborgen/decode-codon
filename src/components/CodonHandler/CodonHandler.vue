@@ -163,6 +163,10 @@ function getNextEmptyInput(this: any) : HTMLInputElement | null {
     }
   }
 
+  if (nextInput === null) {
+    this.maybeResetSelectedInput();
+  }
+
   return nextInput;
 }
 
