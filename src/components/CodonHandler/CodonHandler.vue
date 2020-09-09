@@ -185,6 +185,11 @@ function selectBaseByTextInsertion(this: any, e: KeyboardEvent) : void {
   else if (e.target.validity.patternMismatch) {
     // animateShake();
     this.selectedInput(e.target);
+    if (typeof e.target.dataset.baseId === 'string' && this.bases[e.target.dataset.baseId]) {
+      this.bases[e.target.dataset.baseId] = '';
+      this.updateAminoAcids();
+    }
+
     return;
   }
 
