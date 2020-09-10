@@ -19,7 +19,6 @@ import CodonHandler from 'components/CodonHandler/CodonHandler.vue';
 
 function pushCodon(this: any, codon: any) : void {
   this.aminoAcidData.pushCodon(codon);
-  console.log(this.aminoAcidData.getAllAminoAcids());
 }
 
 export default {
