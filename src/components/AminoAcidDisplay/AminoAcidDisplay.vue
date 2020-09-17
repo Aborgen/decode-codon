@@ -1,7 +1,7 @@
 <template>
 <div class='amino-acid-container'>
-  <section class='chain-display codon-chain'>
-      <textarea v-model="codonChain.join(codonSeparator)" id='codon-field' cols='1' rows='1' readonly></textarea>
+  <section class='chain-display'>
+      <div class='chain-field' id='codon-field'>{{ codonChain.join(codonSeparator) }}</div>
       <button
         @click="copyCodonsToClipboard"
         class='copy-button'>copy</button>
@@ -11,7 +11,7 @@
       </select>
   </section>
   <section class='chain-display amino-acid-chain'>
-      <textarea v-model="aminoAcidChain.join(aminoAcidSeparator)" id='amino-acid-field' cols='1' rows='1' readonly></textarea>
+      <div class='chain-field' id='amino-acid-field'>{{ aminoAcidChain.join(aminoAcidSeparator) }}</div>
       <button
         @click="copyAminoAcidsToClipboard"
         class='copy-button'>copy</button>
@@ -29,20 +29,27 @@
 </template>
 
 <script lang='ts'>
+
 // Not finalized... might not work in all instances. clipboard.js?
-function copyToClipboard(target: HTMLTextAreaElement) : void {
-  if (!(target instanceof HTMLTextAreaElement)) {
+function copyToClipboard(target: HTMLDivElement) : void {
+  if (!(target instanceof HTMLDivElement)) {
     return;
   }
 
-  target.focus();
-  target.select();
+  const textarea:HTMLTextAreaElement = document.createElement("textarea");
+  document.body.appendChild(textarea);
+  textarea.value = target.textContent as string;
+  textarea.focus();
+  textarea.select();
   try {
     document.execCommand('copy');
     console.log('Copied to clipboard');
   }
   catch (err) {
     console.log('Unable to copy');
+  }
+  finally {
+    document.body.removeChild(textarea);
   }
 }
 
@@ -121,18 +128,21 @@ export default {
   font-family: monospace;
 }
 
-.chain-display textarea {
-  flex-basis: 70%;
-  background: white;
-  color: black;
+.chain-field {
+  flex: 0 1 70%;
+  background: #fff;
   height: 80%;
   border: 2px inset black;
+  box-sizing: border-box;
+  font-size: 0.7em;
   padding: 0;
   margin: 0;
-  box-sizing: border-box;
-  resize: none;
-  font-size: 0.7em;
   white-space: nowrap;
+  overflow-x: scroll;
+}
+
+.chain-field >>> .selected-amino-acid {
+  background: orange;
 }
 
 .copy-button {
