@@ -87,6 +87,7 @@ function toggleMode(this: any) : void {
     this.mode = EMode.MANUAL;
   }
   else {
+    this.maybeSubmitCodon();
     this.mode = EMode.AUTO;
   }
 }
