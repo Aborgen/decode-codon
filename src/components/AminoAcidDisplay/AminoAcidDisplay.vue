@@ -102,7 +102,8 @@ export default {
 <style scoped>
 .amino-acid-container {
   height: 15rem;
-  flex-basis: 50%;
+  max-width: 50rem;
+  flex: 1 1 50%;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
@@ -115,8 +116,9 @@ export default {
   flex-flow: row nowrap;
   justify-content: space-evenly;
   align-items: center;
-  flex-basis: 23%;
+  flex: 0 0 23%;
   background: green;
+  font-family: monospace;
 }
 
 .chain-display textarea {
