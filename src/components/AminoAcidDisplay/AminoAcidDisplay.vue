@@ -21,6 +21,15 @@
       </select>
   </section>
   <section class='amino-acid-controls'>
+    <div class='amino-acid-search'>
+      <input
+        class='search-box'
+        type='number'
+        min=1
+        :max="aminoAcidChain.length"></input>
+      <button
+        @click="selectAminoAcid">select</button>
+    </div>
     <button
       @click="clearLists"
       id='amino-acid-clear'>clear all</button>
@@ -63,6 +72,80 @@ function copyCodonsToClipboard(this: any) {
   this.copyToClipboard(target);
 }
 
+function selectAminoAcid(this: any) {
+  if (this.selectedAminoAcid !== null) {
+    this.deselectAminoAcid();
+  }
+
+  const input = document.querySelector('.search-box');
+  if (!(input instanceof HTMLInputElement)) {
+    return;
+  }
+
+  const i = Number.parseInt(input.value) - 1;
+  if (Number.isNaN(i) || i < 0 || i > this.aminoAcidChain.length-1) {
+    return;
+  }
+
+  this.notifyParentSelectAminoAcid(i);
+  const aminoAcidText:HTMLTextAreaElement = document.getElementById('amino-acid-field') as HTMLTextAreaElement;
+  const codonText:HTMLTextAreaElement = document.getElementById('codon-field') as HTMLTextAreaElement;
+  // Need to select both or neither.
+  if (!(aminoAcidText instanceof HTMLDivElement || codonText instanceof HTMLDivElement)) {
+    return;
+  }
+
+  this.selectByIndex(aminoAcidText, i, this.aminoAcidSeparator.length + 3);
+  this.selectByIndex(codonText, i, this.codonSeparator.length + 3);
+}
+
+function selectByIndex(this: any, textArea: HTMLTextAreaElement, i: number, step: number) : void {
+  if (this.aminoAcidChain.length === 0 || !(textArea instanceof HTMLDivElement)) {
+    return;
+  }
+
+  const begin:number = i * step;
+  if (!textArea.textContent || begin > textArea.textContent.length - 3) {
+    throw 'Problem with insertion of amino acids to AminoAcidData';
+  }
+
+  const text = textArea.firstChild;
+  if (!(text instanceof Text)) {
+    throw `The first child of div elements is no longer of type Text: ${textArea.childNodes[0]}`;
+  }
+
+  const span = document.createElement('span');
+  span.classList.add('selected-amino-acid');
+
+  const range = new Range();
+  range.setStart(text, begin);
+  range.setEnd(text, begin+3);
+  range.surroundContents(span);
+}
+
+function deselectAminoAcid(this: any) : void {
+  if (this.selectedAminoAcid === null) {
+    return;
+  }
+
+  const fields:NodeListOf<HTMLDivElement> = document.querySelectorAll('.amino-acid-container .chain-display .chain-field');
+  if (!fields) {
+    return;
+  }
+
+  fields.forEach((field:HTMLDivElement) => {
+    const selected:HTMLDivElement = field.firstElementChild as HTMLDivElement;
+    if (!(selected instanceof HTMLDivElement)) {
+      return;
+    }
+
+    selected.replaceWith(document.createTextNode(selected.textContent as string));
+    field.normalize();
+  });
+
+  this.notifyParentDeselectAminoAcid();
+}
+
 function clearLists(this: any) : void {
   this.onClearLists();
 }
@@ -95,13 +178,28 @@ export default {
     codonChain: {
       type: Array,
       required: true
+    },
+    selectedAminoAcid: {
+      type: Number,
+      default: null
+    },
+    notifyParentSelectAminoAcid: {
+      type: Function,
+      required: true
+    },
+    notifyParentDeselectAminoAcid: {
+      type: Function,
+      required: true
     }
   },
   methods: {
     clearLists,
     copyAminoAcidsToClipboard,
     copyCodonsToClipboard,
-    copyToClipboard
+    copyToClipboard,
+    deselectAminoAcid,
+    selectAminoAcid,
+    selectByIndex
   }
 };
 </script>

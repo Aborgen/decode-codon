@@ -5,6 +5,9 @@
       :amino-acid-chain="aminoAcidData.getAllAminoAcids()"
       :codon-chain="aminoAcidData.getAllCodons()"
       :on-clear-lists="clearAminoAcidData"
+      :selected-amino-acid="selectedAminoAcid"
+      :notify-parent-select-amino-acid="selectAminoAcid"
+      :notify-parent-deselect-amino-acid="deselectAminoAcid"
     />
     <codon-handler
       :on-codon-submit="pushCodon"
@@ -26,11 +29,24 @@ function clearAminoAcidData(this: any) : void {
   this.aminoAcidData.clearLists();
 }
 
+function selectAminoAcid(this: any, i: number) : void {
+  if (typeof i !== 'number' || i < 0) {
+    throw `Cannot accept ${i}, as it is not a number, but of type ${typeof i}`;
+  }
+
+  this.selectedAminoAcid = i;
+}
+
+function deselectAminoAcid(this: any) : void {
+  this.selectedAminoAcid = null;
+}
+
 export default {
   name: 'app',
   data() {
     return {
-      aminoAcidData: new AminoAcidData()
+      aminoAcidData: new AminoAcidData(),
+      selectedAminoAcid: null
     }
   },
   components: {
@@ -39,7 +55,9 @@ export default {
   },
   methods: {
     clearAminoAcidData,
+    deselectAminoAcid,
     pushCodon,
+    selectAminoAcid
   }
 };
 </script>
