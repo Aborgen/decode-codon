@@ -33,6 +33,7 @@ export default class AminoAcidData {
     return this.codonList;
   }
 
+  // TODO: What did I do here, again?
   private commitAminoAcid(codon: Codon) : void {
 //    const aminoAcid:AminoAcid = CodonTable[3][codon][0] as AminoAcid;
     const foo = CodonTable[3];
@@ -64,5 +65,10 @@ export default class AminoAcidData {
 
   getAllAminoAcids() : AminoAcid[] {
     return this.aminoAcidList;
+  }
+
+  clearLists() : void {
+    this.aminoAcidList = [];
+    this.codonList = [];
   }
 }
