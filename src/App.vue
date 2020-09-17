@@ -4,6 +4,7 @@
     <amino-acid-display
       :amino-acid-chain="aminoAcidData.getAllAminoAcids()"
       :codon-chain="aminoAcidData.getAllCodons()"
+      :on-clear-lists="clearAminoAcidData"
     />
     <codon-handler
       :on-codon-submit="pushCodon"
@@ -21,6 +22,10 @@ function pushCodon(this: any, codon: any) : void {
   this.aminoAcidData.pushCodon(codon);
 }
 
+function clearAminoAcidData(this: any) : void {
+  this.aminoAcidData.clearLists();
+}
+
 export default {
   name: 'app',
   data() {
@@ -33,7 +38,8 @@ export default {
     CodonHandler
   },
   methods: {
-    pushCodon
+    clearAminoAcidData,
+    pushCodon,
   }
 };
 </script>

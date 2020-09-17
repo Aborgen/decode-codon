@@ -20,7 +20,11 @@
           :value="separator">{{ description }}</option>
       </select>
   </section>
-  <section class='chain-display extra'></section>
+  <section class='amino-acid-controls'>
+    <button
+      @click="clearLists"
+      id='amino-acid-clear'>clear all</button>
+  </section>
 </div>
 </template>
 
@@ -50,7 +54,10 @@ function copyAminoAcidsToClipboard(this: any) {
 function copyCodonsToClipboard(this: any) {
   const target = document.querySelector('#codon-field');
   this.copyToClipboard(target);
-  console.log(this.codonSeparator);
+}
+
+function clearLists(this: any) : void {
+  this.onClearLists();
 }
 
 export default {
@@ -74,12 +81,17 @@ export default {
       type: Array,
       required: true
     },
+    onClearLists: {
+      type: Function,
+      required: true
+    },
     codonChain: {
       type: Array,
       required: true
     }
   },
   methods: {
+    clearLists,
     copyAminoAcidsToClipboard,
     copyCodonsToClipboard,
     copyToClipboard
@@ -127,4 +139,20 @@ export default {
   padding: 0;
   margin: 0;
 }
+
+.amino-acid-controls {
+  flex-basis: 40%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  background: green;
+  width: 8rem;
+  align-self: flex-end;
+}
+
+#amino-acid-clear {
+  font-size: 0.8em;
+}
+
 </style>
