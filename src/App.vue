@@ -40,12 +40,12 @@ export default {
 
 <style>
 html, body {
+  background: #3571a638;
   margin: 0;
   padding: 0;
 }
 
 .app {
-  background: #3571a638;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,10 +55,10 @@ html, body {
 }
 
 .app-container {
-  width: 70%;
+  flex: 0 0 70%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
-  align-items: space-around;
+  align-items: center;
 }
 </style>
