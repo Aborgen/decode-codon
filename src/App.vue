@@ -11,6 +11,7 @@
     />
     <codon-handler
       :on-codon-submit="pushCodon"
+      :notify-parent-deselect-amino-acid="deselectAminoAcid"
     />
   </div>
 </div>

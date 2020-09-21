@@ -103,6 +103,7 @@ function maybeSubmitCodon(this: any) : void {
     codon += base;
   }
 
+  this.notifyParentDeselectAminoAcid();
   this.onCodonSubmit(codon);
   this.resetInputs();
 } 
@@ -268,6 +269,10 @@ export default {
     updateAminoAcids,
   },
   props: {
+    notifyParentDeselectAminoAcid: {
+      type: Function,
+      required: true
+    },
     onCodonSubmit: {
       type: Function,
       required: true
