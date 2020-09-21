@@ -40,6 +40,10 @@
       <button
         @click="setSelectedAminoAcid">select</button>
     </div>
+    <template v-if="selectedAminoAcid !== null" class='amino-acid-modify'>
+      <button
+        @click="toggleEditMode">toggle edit</button>
+    </template>
     <button
       @click="clearLists"
       id='amino-acid-clear'>clear all</button>
@@ -105,6 +109,14 @@ function scrollChains(this: any) : void {
   });
 }
 
+function toggleEditMode(this: any) : void {
+  if (this.selectedAminoAcid === null) {
+    return;
+  }
+
+  this.notifyParentToggleEditMode();
+}
+
 function clearLists(this: any) : void {
   this.onClearLists();
 }
@@ -140,6 +152,10 @@ export default {
       type: Number,
       default: null
     },
+    notifyParentToggleEditMode: {
+      type: Function,
+      required: true
+    },
     notifyParentSelectAminoAcid: {
       type: Function,
       required: true
@@ -154,6 +170,7 @@ export default {
     copyAminoAcidsToClipboard,
     copyCodonsToClipboard,
     copyToClipboard,
+    toggleEditMode,
     scrollChains,
     setSelectedAminoAcid,
     unsetSelectedAminoAcid

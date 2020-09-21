@@ -6,12 +6,16 @@
       :codon-chain="aminoAcidData.getAllCodons()"
       :on-clear-lists="clearAminoAcidData"
       :selected-amino-acid="selectedAminoAcid"
+      :notify-parent-toggle-edit-mode="toggleEditMode"
       :notify-parent-select-amino-acid="selectAminoAcid"
       :notify-parent-deselect-amino-acid="deselectAminoAcid"
     />
     <codon-handler
+      :edit-mode="editMode"
+      :on-codon-edit="editCodon"
       :on-codon-submit="pushCodon"
       :notify-parent-deselect-amino-acid="deselectAminoAcid"
+      :notify-parent-toggle-edit-mode="toggleEditMode"
     />
   </div>
 </div>
@@ -24,6 +28,10 @@ import CodonHandler from 'components/CodonHandler/CodonHandler.vue';
 
 function pushCodon(this: any, codon: any) : void {
   this.aminoAcidData.pushCodon(codon);
+}
+
+function editCodon(this: any, codon: string) : void {
+  this.aminoAcidData.setCodon(this.selectedAminoAcid, codon);
 }
 
 function clearAminoAcidData(this: any) : void {
@@ -42,11 +50,16 @@ function deselectAminoAcid(this: any) : void {
   this.selectedAminoAcid = null;
 }
 
+function toggleEditMode(this: any) : void {
+  this.editMode = !this.editMode;
+}
+
 export default {
   name: 'app',
   data() {
     return {
       aminoAcidData: new AminoAcidData(),
+      editMode: false,
       selectedAminoAcid: null
     }
   },
@@ -57,6 +70,8 @@ export default {
   methods: {
     clearAminoAcidData,
     deselectAminoAcid,
+    editCodon,
+    toggleEditMode,
     pushCodon,
     selectAminoAcid
   }

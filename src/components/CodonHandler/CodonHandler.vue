@@ -1,6 +1,8 @@
 <template>
-<div class='codon-handler'>
-  <header class='codon-instruction'>Codon Insertion</header>
+<div 
+  :class="{'edit-mode': editMode}"
+  class='codon-handler'>
+  <header class='codon-instruction'>{{ editMode ? 'Edit Codon' : 'Codon Insertion' }}</header>
   <section class='amino-acid-choices'>
     <ul>
       <li v-for="aminoAcid in possibleAminoAcids"
@@ -29,11 +31,12 @@
     </div>
     <div class='base-options-group'>
       <button
-        @click="maybeSubmitCodon"
+        @click="editMode ? editCodon() : maybeSubmitCodon()"
         class='codon-commit'>commit</button>
       <button
         @click="toggleMode"
         :class="{'codon-mode-auto': isModeAuto()}"
+        :disabled="editMode"
         class='codon-mode-toggle'>auto</button>
       <button
         @click="resetInputs"
@@ -92,21 +95,41 @@ function toggleMode(this: any) : void {
   }
 }
 
-function maybeSubmitCodon(this: any) : void {
+function collectBases(this: any) : string | null {
   let codon:string = '';
   for (let [_, base] of Object.entries(this.bases)) {
     // Only submit codon when all three have been input
     if (base === '') {
-      return;
+      return null;
     }
 
     codon += base;
+  }
+
+  return codon;
+}
+
+function maybeSubmitCodon(this: any) : void {
+  const codon:string = this.collectBases();
+  if (codon === null) {
+    return;
   }
 
   this.notifyParentDeselectAminoAcid();
   this.onCodonSubmit(codon);
   this.resetInputs();
 } 
+
+function editCodon(this: any) : void {
+  const codon:string = this.collectBases();
+  if (codon === null) {
+    return;
+  }
+
+  this.onCodonEdit(codon);
+  this.resetInputs();
+  this.notifyParentToggleEditMode();
+}
 
 function updateAminoAcids(this: any) : void {
   let bases:string = '';
@@ -254,6 +277,8 @@ export default {
     };
   },
   methods: {
+    collectBases,
+    editCodon,
     getNextEmptyInput,
     isModeAuto,
     lockBaseInputBlur,
@@ -269,7 +294,19 @@ export default {
     updateAminoAcids,
   },
   props: {
+    editMode: {
+      type: Boolean,
+      required: true
+    },
     notifyParentDeselectAminoAcid: {
+      type: Function,
+      required: true
+    },
+    notifyParentToggleEditMode: {
+      type: Function,
+      required: true
+    },
+    onCodonEdit: {
       type: Function,
       required: true
     },
@@ -282,6 +319,7 @@ export default {
 </script>
 
 <style>
+
 .codon-handler {
   display: flex;
   flex-flow: column nowrap;
@@ -289,6 +327,11 @@ export default {
   border: 0.25rem dashed #000;
   border-radius: 0 0 0.8rem 0;
   padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.codon-instruction {
+  text-align: center;
 }
 
 .base-display {
@@ -391,5 +434,9 @@ export default {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.edit-mode {
+  background: #7cff7c9c;
 }
 </style>
