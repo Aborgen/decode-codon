@@ -1,7 +1,12 @@
 <template>
 <div class='amino-acid-container'>
   <section class='chain-display'>
-      <div class='chain-field' id='codon-field'>{{ codonChain.join(codonSeparator) }}</div>
+      <ol class='chain-field' id='codon-field'>
+        <template v-for="(codon, i) in codonChain">
+          <template v-if="i > 0">{{ codonSeparator }}</template>
+          <li :class="{'selected-amino-acid':i === selectedAminoAcid}">{{ codon }}</li>
+        </template>
+      </ol>
       <button
         @click="copyCodonsToClipboard"
         class='copy-button'>copy</button>
@@ -11,7 +16,12 @@
       </select>
   </section>
   <section class='chain-display amino-acid-chain'>
-      <div class='chain-field' id='amino-acid-field'>{{ aminoAcidChain.join(aminoAcidSeparator) }}</div>
+      <ol class='chain-field' id='amino-acid-field'>
+        <template v-for="(aminoAcid, i) in aminoAcidChain">
+          <template v-if="i > 0">{{ aminoAcidSeparator }}</template>
+          <li :class="{'selected-amino-acid':i === selectedAminoAcid}">{{ aminoAcid }}</li>
+        </template>
+      </ol>
       <button
         @click="copyAminoAcidsToClipboard"
         class='copy-button'>copy</button>
@@ -28,7 +38,7 @@
         min=1
         :max="aminoAcidChain.length"></input>
       <button
-        @click="selectAminoAcid">select</button>
+        @click="setSelectedAminoAcid">select</button>
     </div>
     <button
       @click="clearLists"
@@ -38,16 +48,11 @@
 </template>
 
 <script lang='ts'>
-
 // Not finalized... might not work in all instances. clipboard.js?
-function copyToClipboard(target: HTMLDivElement) : void {
-  if (!(target instanceof HTMLDivElement)) {
-    return;
-  }
-
+function copyToClipboard(s: string) : void {
   const textarea:HTMLTextAreaElement = document.createElement("textarea");
   document.body.appendChild(textarea);
-  textarea.value = target.textContent as string;
+  textarea.value = s;
   textarea.focus();
   textarea.select();
   try {
@@ -63,21 +68,17 @@ function copyToClipboard(target: HTMLDivElement) : void {
 }
 
 function copyAminoAcidsToClipboard(this: any) {
-  const target = document.querySelector('#amino-acid-field');
-  this.copyToClipboard(target);
+  const s:string = this.aminoAcidChain.join(this.aminoAcidSeparator);
+  this.copyToClipboard(s);
 }
 
 function copyCodonsToClipboard(this: any) {
-  const target = document.querySelector('#codon-field');
-  this.copyToClipboard(target);
+  const s:string = this.codonChain.join(this.codonSeparator);
+  this.copyToClipboard(s);
 }
 
-function selectAminoAcid(this: any) {
-  if (this.selectedAminoAcid !== null) {
-    this.deselectAminoAcid();
-  }
-
-  const input = document.querySelector('.search-box');
+function setSelectedAminoAcid(this: any) : void {
+  const input:HTMLInputElement = document.querySelector('.search-box') as HTMLInputElement;
   if (!(input instanceof HTMLInputElement)) {
     return;
   }
@@ -88,62 +89,20 @@ function selectAminoAcid(this: any) {
   }
 
   this.notifyParentSelectAminoAcid(i);
-  const aminoAcidText:HTMLTextAreaElement = document.getElementById('amino-acid-field') as HTMLTextAreaElement;
-  const codonText:HTMLTextAreaElement = document.getElementById('codon-field') as HTMLTextAreaElement;
-  // Need to select both or neither.
-  if (!(aminoAcidText instanceof HTMLDivElement || codonText instanceof HTMLDivElement)) {
-    return;
-  }
-
-  this.selectByIndex(aminoAcidText, i, this.aminoAcidSeparator.length + 3);
-  this.selectByIndex(codonText, i, this.codonSeparator.length + 3);
+  this.$nextTick(() => this.scrollChains());
 }
 
-function selectByIndex(this: any, textArea: HTMLTextAreaElement, i: number, step: number) : void {
-  if (this.aminoAcidChain.length === 0 || !(textArea instanceof HTMLDivElement)) {
-    return;
-  }
-
-  const begin:number = i * step;
-  if (!textArea.textContent || begin > textArea.textContent.length - 3) {
-    throw 'Problem with insertion of amino acids to AminoAcidData';
-  }
-
-  const text = textArea.firstChild;
-  if (!(text instanceof Text)) {
-    throw `The first child of div elements is no longer of type Text: ${textArea.childNodes[0]}`;
-  }
-
-  const span = document.createElement('span');
-  span.classList.add('selected-amino-acid');
-
-  const range = new Range();
-  range.setStart(text, begin);
-  range.setEnd(text, begin+3);
-  range.surroundContents(span);
-}
-
-function deselectAminoAcid(this: any) : void {
-  if (this.selectedAminoAcid === null) {
-    return;
-  }
-
-  const fields:NodeListOf<HTMLDivElement> = document.querySelectorAll('.amino-acid-container .chain-display .chain-field');
-  if (!fields) {
-    return;
-  }
-
-  fields.forEach((field:HTMLDivElement) => {
-    const selected:HTMLDivElement = field.firstElementChild as HTMLDivElement;
-    if (!(selected instanceof HTMLDivElement)) {
-      return;
-    }
-
-    selected.replaceWith(document.createTextNode(selected.textContent as string));
-    field.normalize();
-  });
-
+function unsetSelectedAminoAcid(this: any) :void {
   this.notifyParentDeselectAminoAcid();
+}
+
+function scrollChains(this: any) : void {
+  document.querySelectorAll('.chain-field').forEach((field) => {
+    const selectedChild = field.querySelector('.selected-amino-acid');
+    if (selectedChild) {
+      selectedChild.scrollIntoView(true);
+    }
+  });
 }
 
 function clearLists(this: any) : void {
@@ -159,9 +118,7 @@ export default {
       possibleSeparators: {
         '-' :'dash',
         ''  :'none',
-        ' ' :'space',
         ',' :'comma',
-        ', ':'comma space',
         '_' :'underscore'
       }
     };
@@ -197,9 +154,9 @@ export default {
     copyAminoAcidsToClipboard,
     copyCodonsToClipboard,
     copyToClipboard,
-    deselectAminoAcid,
-    selectAminoAcid,
-    selectByIndex
+    scrollChains,
+    setSelectedAminoAcid,
+    unsetSelectedAminoAcid
   }
 };
 </script>
@@ -228,6 +185,10 @@ export default {
 
 .chain-field {
   flex: 0 1 70%;
+  display: inline-flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
   background: #fff;
   height: 80%;
   border: 2px inset black;
@@ -237,9 +198,14 @@ export default {
   margin: 0;
   white-space: nowrap;
   overflow-x: scroll;
+  list-style-type: none;
 }
 
-.chain-field >>> .selected-amino-acid {
+.chain-field li {
+  display: inline;
+}
+
+.selected-amino-acid {
   background: orange;
 }
 
