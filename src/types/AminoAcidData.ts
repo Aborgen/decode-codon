@@ -33,6 +33,15 @@ export default class AminoAcidData {
     return this.codonList;
   }
 
+  insertCodon(i: number, codon:Codon) : void {
+    if (!validateCodon(codon)) {
+      throw `Bad argument passed to method: ${typeof codon}, should be: 'Codon'`;
+    }
+
+    this.codonList.splice(i, 0, codon);
+    this.insertAminoAcid(i, codon);
+  }
+
   setCodon(i: number, codon:Codon) : void {
     if (!validateCodon(codon)) {
       throw `Bad argument passed to method: ${typeof codon}, should be: 'Codon'`;
@@ -58,6 +67,11 @@ export default class AminoAcidData {
 
   getAllAminoAcids() : AminoAcid[] {
     return this.aminoAcidList;
+  }
+
+  private insertAminoAcid(i: number, codon: Codon) : void {
+    const aminoAcid = this.translateCodon(codon)
+    this.aminoAcidList.splice(i, 0, aminoAcid);
   }
 
   private editAminoAcid(i: number, codon: Codon) : void {

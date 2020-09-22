@@ -26,7 +26,16 @@ import AminoAcidDisplay from 'components/AminoAcidDisplay/AminoAcidDisplay.vue';
 import CodonHandler from 'components/CodonHandler/CodonHandler.vue';
 
 function pushCodon(this: any, codon: any) : void {
-  this.aminoAcidData.pushCodon(codon);
+  // Ideally, there is no way for this to happen
+  if (this.editMode) {
+    throw 'Cannot submit a new codon while in edit mode!'
+  }
+  else if (this.selectedAminoAcid !== null) {
+    this.aminoAcidData.insertCodon(this.selectedAminoAcid, codon);
+  }
+  else {
+    this.aminoAcidData.pushCodon(codon);
+  }
 }
 
 function editCodon(this: any, codon: string) : void {
