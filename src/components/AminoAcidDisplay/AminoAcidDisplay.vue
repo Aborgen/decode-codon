@@ -43,6 +43,8 @@
     <template v-if="selectedAminoAcid !== null" class='amino-acid-modify'>
       <button
         @click="toggleEditMode">toggle edit</button>
+      <button
+        @click="deleteCodon">delete</button>
     </template>
     <button
       @click="clearLists"
@@ -117,6 +119,13 @@ function toggleEditMode(this: any) : void {
   this.notifyParentToggleEditMode();
 }
 
+function deleteCodon(this: any) : void {
+  const result = window.confirm(`Delete selected? [ ${this.codonChain[this.selectedAminoAcid]} <--> ${this.aminoAcidChain[this.selectedAminoAcid]} ]`);
+  if (result) {
+    this.onDeleteCodon();
+  }
+}
+
 function clearLists(this: any) : void {
   this.onClearLists();
 }
@@ -141,6 +150,10 @@ export default {
       required: true
     },
     onClearLists: {
+      type: Function,
+      required: true
+    },
+    onDeleteCodon: {
       type: Function,
       required: true
     },
@@ -170,10 +183,26 @@ export default {
     copyAminoAcidsToClipboard,
     copyCodonsToClipboard,
     copyToClipboard,
+    deleteCodon,
     toggleEditMode,
     scrollChains,
     setSelectedAminoAcid,
     unsetSelectedAminoAcid
+  },
+  watch: {
+    selectedAminoAcid: {
+      immediate: true,
+      handler: function(val: number, oldVal: number) : void {
+        if (val === null) {
+          const selectInput:HTMLInputElement = document.getElementById('search-box') as HTMLInputElement;
+          if (!(selectInput instanceof HTMLInputElement)) {
+            return;
+          }
+
+          selectInput.value = '';
+        }
+      }
+    }
   }
 };
 </script>

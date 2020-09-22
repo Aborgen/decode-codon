@@ -51,6 +51,15 @@ export default class AminoAcidData {
     this.editAminoAcid(i, codon);
   }
 
+  deleteCodon(i: number) : void {
+    if (i < 0 || i > this.codonList.length) {
+      throw `Index ${i} is out of bounds of codonList[length=${this.codonList.length}]`
+    }
+
+    this.codonList.splice(i, 1);
+    this.deleteAminoAcid(i);
+  }
+
   private commitAminoAcid(codon: Codon) : void {
     const aminoAcid = this.translateCodon(codon);
     this.aminoAcidList.push(aminoAcid);
@@ -77,6 +86,14 @@ export default class AminoAcidData {
   private editAminoAcid(i: number, codon: Codon) : void {
     const aminoAcid = this.translateCodon(codon)
     this.aminoAcidList.splice(i, 1, aminoAcid);
+  }
+
+  private deleteAminoAcid(i: number) : void {
+    if (i < 0 || i > this.aminoAcidList.length) {
+      throw `Index ${i} is out of bounds of aminoAcidList[length=${this.aminoAcidList.length}]`
+    }
+
+    this.aminoAcidList.splice(i, 1);
   }
 
   private translateCodon(codon: Codon) : AminoAcid {

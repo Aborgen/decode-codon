@@ -5,6 +5,7 @@
       :amino-acid-chain="aminoAcidData.getAllAminoAcids()"
       :codon-chain="aminoAcidData.getAllCodons()"
       :on-clear-lists="clearAminoAcidData"
+      :on-delete-codon="deleteCodon"
       :selected-amino-acid="selectedAminoAcid"
       :notify-parent-toggle-edit-mode="toggleEditMode"
       :notify-parent-select-amino-acid="selectAminoAcid"
@@ -42,6 +43,11 @@ function editCodon(this: any, codon: string) : void {
   this.aminoAcidData.setCodon(this.selectedAminoAcid, codon);
 }
 
+function deleteCodon(this: any) : void {
+  this.aminoAcidData.deleteCodon(this.selectedAminoAcid);
+  this.selectedAminoAcid = null;
+}
+
 function clearAminoAcidData(this: any) : void {
   this.aminoAcidData.clearLists();
 }
@@ -77,6 +83,7 @@ export default {
   },
   methods: {
     clearAminoAcidData,
+    deleteCodon,
     deselectAminoAcid,
     editCodon,
     toggleEditMode,
