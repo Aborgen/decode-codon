@@ -204,6 +204,25 @@ export default {
           selectInput.value = '';
         }
       }
+    },
+    // The purpose of this watcher is to scroll all of the displays to the end when new codons are commited. The only exception
+    // is if any index is selected. In that case, do not scroll.
+    aminoAcidChain: {
+      handler: function(this: any, val: string[], oldVal: string[]) : void {
+        if (this.selectedAminoAcid !== null) {
+          return;
+        }
+
+        this.$nextTick(() => {
+          document.querySelectorAll('.chain-field').forEach((field) => {
+            if (!(field instanceof HTMLElement)) {
+              return;
+            }
+
+            field.scrollLeft = field.scrollWidth;
+          });
+        });
+      }
     }
   }
 };
