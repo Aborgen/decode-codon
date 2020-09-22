@@ -33,12 +33,13 @@
   <section class='amino-acid-controls'>
     <div class='amino-acid-search'>
       <input
-        class='search-box'
+        @input="searchBoxValue = Number.parseInt($event.target.value)-1"
+        id='search-box'
         type='number'
         min=1
         :max="aminoAcidChain.length"></input>
       <button
-        @click="selectedAminoAcid === null ? setSelectedAminoAcid() : unsetSelectedAminoAcid()">{{ selectedAminoAcid === null ? 'select' : 'deselect' }}</button>
+        @click="selectedAminoAcid !== searchBoxValue ? setSelectedAminoAcid() : unsetSelectedAminoAcid()">{{ selectedAminoAcid !== searchBoxValue ? 'select' : 'deselect' }}</button>
     </div>
     <template v-if="selectedAminoAcid !== null" class='amino-acid-modify'>
       <button
@@ -84,7 +85,7 @@ function copyCodonsToClipboard(this: any) {
 }
 
 function setSelectedAminoAcid(this: any) : void {
-  const input:HTMLInputElement = document.querySelector('.search-box') as HTMLInputElement;
+  const input:HTMLInputElement = document.getElementById('search-box') as HTMLInputElement;
   if (!(input instanceof HTMLInputElement)) {
     return;
   }
@@ -141,7 +142,8 @@ export default {
         ''  :'none',
         ',' :'comma',
         '_' :'underscore'
-      }
+      },
+      searchBoxValue: ''
     };
   },
   props: {
