@@ -120,7 +120,6 @@ function maybeSubmitCodon(this: any) : void {
     return;
   }
 
-  this.notifyParentDeselectAminoAcid();
   this.onCodonSubmit(codon);
   this.resetInputs();
 } 
@@ -301,10 +300,6 @@ export default {
   props: {
     editMode: {
       type: Boolean,
-      required: true
-    },
-    notifyParentDeselectAminoAcid: {
-      type: Function,
       required: true
     },
     notifyParentToggleEditMode: {

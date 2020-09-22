@@ -14,7 +14,6 @@
       :edit-mode="editMode"
       :on-codon-edit="editCodon"
       :on-codon-submit="pushCodon"
-      :notify-parent-deselect-amino-acid="deselectAminoAcid"
       :notify-parent-toggle-edit-mode="toggleEditMode"
     />
   </div>
