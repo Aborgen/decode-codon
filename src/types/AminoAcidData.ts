@@ -42,24 +42,8 @@ export default class AminoAcidData {
     this.editAminoAcid(i, codon);
   }
 
-  // TODO: What did I do here, again?
   private commitAminoAcid(codon: Codon) : void {
-//    const aminoAcid:AminoAcid = CodonTable[3][codon][0] as AminoAcid;
-    const foo = CodonTable[3];
-    if (typeof foo !== 'object') {
-      throw "CodonTable is broken";
-    }
-
-    const bar:string[] = foo[String(codon)];
-    if (!Array.isArray(bar)) {
-      throw "CodonTable is broken";
-    }
-
-    const aminoAcid:AminoAcid = bar[0];
-    if (!validateAminoAcid(aminoAcid)) {
-      throw `Amino acid corresponding with ${codon} does not exist`;
-    }
-
+    const aminoAcid = this.translateCodon(codon);
     this.aminoAcidList.push(aminoAcid);
   } 
 
@@ -77,6 +61,11 @@ export default class AminoAcidData {
   }
 
   private editAminoAcid(i: number, codon: Codon) : void {
+    const aminoAcid = this.translateCodon(codon)
+    this.aminoAcidList.splice(i, 1, aminoAcid);
+  }
+
+  private translateCodon(codon: Codon) : AminoAcid {
     const table = CodonTable[3];
     if (!table) {
       throw 'CodonTable is broken';
@@ -92,7 +81,7 @@ export default class AminoAcidData {
       throw `Amino acid corresponding with ${codon} does not exist`;
     }
 
-    this.aminoAcidList.splice(i, 1, aminoAcid);
+    return aminoAcid;
   }
 
   clearLists() : void {
