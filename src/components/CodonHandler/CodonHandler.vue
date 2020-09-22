@@ -35,7 +35,7 @@
         class='codon-commit'>commit</button>
       <button
         @click="toggleMode"
-        :class="{'codon-mode-auto': isModeAuto()}"
+        :class="{'codon-mode-auto': !editMode && isModeAuto()}"
         :disabled="editMode"
         class='codon-mode-toggle'>auto</button>
       <button
@@ -110,6 +110,11 @@ function collectBases(this: any) : string | null {
 }
 
 function maybeSubmitCodon(this: any) : void {
+  // This method should not be invoked while editing a codon
+  if (this.editMode) {
+    return;
+  }
+
   const codon:string = this.collectBases();
   if (codon === null) {
     return;
