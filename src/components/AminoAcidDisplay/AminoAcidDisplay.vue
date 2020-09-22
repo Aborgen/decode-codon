@@ -38,7 +38,7 @@
         min=1
         :max="aminoAcidChain.length"></input>
       <button
-        @click="setSelectedAminoAcid">select</button>
+        @click="selectedAminoAcid === null ? setSelectedAminoAcid() : unsetSelectedAminoAcid()">{{ selectedAminoAcid === null ? 'select' : 'deselect' }}</button>
     </div>
     <template v-if="selectedAminoAcid !== null" class='amino-acid-modify'>
       <button
