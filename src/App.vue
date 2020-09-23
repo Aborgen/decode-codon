@@ -58,6 +58,16 @@ function selectAminoAcid(this: any, i: number) : void {
   }
 
   this.selectedAminoAcid = i;
+  this.$nextTick(() => this.scrollChains());
+}
+
+function scrollChains(this: any) : void {
+  document.querySelectorAll('.chain-field').forEach((field) => {
+    const selectedChild = field.querySelector('.selected-amino-acid');
+    if (selectedChild) {
+      selectedChild.scrollIntoView(true);
+    }
+  });
 }
 
 function deselectAminoAcid(this: any) : void {
@@ -88,6 +98,7 @@ export default {
     editCodon,
     toggleEditMode,
     pushCodon,
+    scrollChains,
     selectAminoAcid
   }
 };
