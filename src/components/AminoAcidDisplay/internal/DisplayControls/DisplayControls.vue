@@ -10,15 +10,17 @@
     <button
       @click="handleSelectButtonClick">{{ selectedAminoAcid !== null && selectedAminoAcid === searchBoxValue ? 'deselect' : 'select' }}</button>
   </div>
-  <template v-if="selectedAminoAcid !== null" class='amino-acid-modify'>
+  <div class='display-modify'>
+    <template v-if="selectedAminoAcid !== null" class='amino-acid-modify'>
+      <button
+        @click="toggleEditMode">toggle edit</button>
+      <button
+        @click="deleteCodon">delete</button>
+    </template>
     <button
-      @click="toggleEditMode">toggle edit</button>
-    <button
-      @click="deleteCodon">delete</button>
-  </template>
-  <button
-    @click="onClearLists"
-    id='display-clear'>clear all</button>
+      @click="onClearLists"
+      id='display-clear'>clear all</button>
+  </div>
 </section>
 </template>
 
@@ -64,7 +66,6 @@ function toggleEditMode(this: any) : void {
 function unsetSelectedAminoAcid(this: any) :void {
   this.notifyParentDeselectAminoAcid();
 }
-
 
 export default {
   name: 'DisplayControls',
@@ -132,17 +133,28 @@ export default {
 
 <style scoped>
 .display-controls {
-  flex-basis: 40%;
+  flex: 0 0 40%;
   display: flex;
-  flex-flow: row nowrap;
+  width: 60%;
+  flex-flow: row wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   background: green;
-  width: 8rem;
   align-self: flex-end;
 }
 
+.display-search {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+}
+
+#search-box {
+  width: 4em;
+}
+
 #display-clear {
-  font-size: 0.8em;
+  
 }
 </style>

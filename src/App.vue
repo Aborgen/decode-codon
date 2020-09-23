@@ -44,12 +44,21 @@ function editCodon(this: any, codon: string) : void {
 }
 
 function deleteCodon(this: any) : void {
+  if (this.editMode) {
+    this.toggleEditMode();
+  }
+
   this.aminoAcidData.deleteCodon(this.selectedAminoAcid);
   this.selectedAminoAcid = null;
 }
 
 function clearAminoAcidData(this: any) : void {
+  if (this.editMode) {
+    this.toggleEditMode();
+  }
+
   this.aminoAcidData.clearLists();
+  this.deselectAminoAcid();
 }
 
 function selectAminoAcid(this: any, i: number) : void {
