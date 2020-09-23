@@ -3,6 +3,7 @@
   <div class='display-search'>
     <input
       @input="searchBoxValue = Number.parseInt($event.target.value)-1"
+      @keyup.enter="handleKeyboardSelect($event.target)"
       id='search-box'
       type='number'
       min=1
@@ -29,6 +30,27 @@ function deleteCodon(this: any) : void {
   const result = window.confirm('Delete selected?');
   if (result) {
     this.onDeleteCodon();
+  }
+}
+
+function handleKeyboardSelect(this: any, target: HTMLInputElement) : void {
+  if (!(target instanceof HTMLInputElement)) {
+    return;
+  }
+
+  if (!target.validity.valid) {
+    if (target.validity.rangeUnderflow) {
+      target.value = target.min;
+    }
+    else if (target.validity.rangeOverflow) {
+      target.value = target.max;
+    }
+
+    target.dispatchEvent(new Event('input'));
+  }
+  else if (this.selectedAminoAcid !== Number.parseInt(target.value)-1) {
+    this.setSelectedAminoAcid();
+    target.blur();
   }
 }
 
@@ -108,6 +130,7 @@ export default {
   },
   methods: {
     deleteCodon,
+    handleKeyboardSelect,
     handleSelectButtonClick,
     setSelectedAminoAcid,
     toggleEditMode,
