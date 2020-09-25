@@ -98,7 +98,7 @@ export default class AminoAcidData {
 
   private translateCodon(codon: Codon) : AminoAcid {
     const table = CodonTable[3];
-    if (!table) {
+    if (!table)  {
       throw 'CodonTable is broken';
     }
 
@@ -120,5 +120,9 @@ export default class AminoAcidData {
   clearLists() : void {
     this.aminoAcidList = [];
     this.codonList = [];
+  }
+
+  length() : void {
+    return this.aminoAcidList.length;
   }
 }

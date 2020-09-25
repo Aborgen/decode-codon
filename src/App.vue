@@ -40,12 +40,23 @@ function pushCodon(this: any, codon: any) : void {
 }
 
 function editCodon(this: any, codon: string) : void {
+  if (!this.editMode) {
+    throw 'A codon cannot be edited until editMode has been set to true';
+  }
+  else if (this.selectedAminoAcid === null) {
+    throw 'Cannot edit a codon when no codon has been selected!';
+  }
+
   this.aminoAcidData.setCodon(this.selectedAminoAcid, codon);
 }
 
 function deleteCodon(this: any) : void {
   if (this.editMode) {
     this.toggleEditMode();
+  }
+
+  if (this.selectedAminoAcid === null) {
+    throw 'Cannot delete a codon if no codon has been selected!';
   }
 
   this.aminoAcidData.deleteCodon(this.selectedAminoAcid);
@@ -62,8 +73,11 @@ function clearAminoAcidData(this: any) : void {
 }
 
 function selectAminoAcid(this: any, i: number) : void {
-  if (typeof i !== 'number' || i < 0) {
+  if (typeof i !== 'number') {
     throw `Cannot accept ${i}, as it is not a number, but of type ${typeof i}`;
+  }
+  else if (i < 0 || i >= this.aminoAcidData.length()) {
+    throw RangeError(`Index ${i} is not within range [0, ${this.aminoAcidData.length()}] (inclusive)`);
   }
 
   this.selectedAminoAcid = i;
