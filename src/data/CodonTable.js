@@ -1,4 +1,4 @@
-const data: any = {
+const data = {
   1: {
     "U": ["Phe", "Leu", "Ser", "Tyr", "Stop", "Cys", "Trp"],
     "C": ["Leu", "Pro", "His", "Gln", "Arg"],

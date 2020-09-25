@@ -1,4 +1,4 @@
-import AminoAcidKey from 'data/AminoAcidKey.ts';
+import AminoAcidKey from 'data/AminoAcidKey';
 
 //type AminoAcid = string & { __aminoAcid: true };
 type AminoAcid = string;

@@ -48,7 +48,7 @@
 
 <script lang='ts'>
 import { Codon } from 'types/Codon.ts';
-import CodonTable from 'data/CodonTable.ts';
+import CodonTable from 'data/CodonTable';
 
 enum EMode {
   AUTO,
@@ -160,6 +160,7 @@ function updateAminoAcids(this: any) : void {
     return;
   }
 
+  // @ts-ignore
   this.possibleAminoAcids = CodonTable[idx][bases];
 }
 

@@ -1,6 +1,6 @@
 import { AminoAcid, validateAminoAcid } from './AminoAcid.ts';
 import { Codon, validateCodon } from './Codon.ts';
-import CodonTable from 'data/CodonTable.ts';
+import CodonTable from 'data/CodonTable';
 
 export default class AminoAcidData {
   private aminoAcidList: AminoAcid[];
@@ -102,7 +102,9 @@ export default class AminoAcidData {
       throw 'CodonTable is broken';
     }
 
-    const aminoAcids:AminoAcid = table[codon as string];
+    // Not sure what the compiler wants from me here
+    // @ts-ignore
+    const aminoAcids:AminoAcid = table[codon];
     if (!Array.isArray(aminoAcids) || aminoAcids.length !== 1) {
       throw "CodonTable is broken";
     }

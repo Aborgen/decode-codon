@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "module": "es6",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strict": true,
-    "target": "es5"
+    "target": "es5",
+    "esModuleInterop": true
   }
 }
 
