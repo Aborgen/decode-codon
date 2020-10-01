@@ -258,6 +258,8 @@ function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
     return;
   }
 
+  // this.lockBaseInputBlur is invoked during the target button's mousedown and touchstart events
+  this.unlockBaseInputBlur();
   let nextInput:HTMLInputElement = this.currentlySelectedInput || this.getNextEmptyInput();
   if (!nextInput) {
     return;
@@ -269,8 +271,6 @@ function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
     this.maybeSubmitCodon();
   }
 
-  // this.lockBaseInputBlur is invoked during the value button's mousedown and touchstart events
-  this.unlockBaseInputBlur();
   this.getNextEmptyInput();
 }
 
