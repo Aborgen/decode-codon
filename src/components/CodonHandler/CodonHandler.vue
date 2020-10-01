@@ -136,6 +136,10 @@ function maybeSubmitCodon(this: any) : void {
 } 
 
 function editCodon(this: any) : void {
+  if (!this.editMode) {
+    throw 'Cannot edit a codon when editMode is false';
+  }
+
   const codon:string = this.collectBases();
   if (codon === null) {
     return;
