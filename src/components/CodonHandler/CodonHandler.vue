@@ -14,7 +14,7 @@
       @click="selectedInput($event.target)"
       @touchstart="selectedInput($event.target)"
       @blur="maybeResetSelectedInput"
-      @input="selectBaseByTextInsertion"
+      @input="selectBaseByTextInsertion($event.target)"
       :id="'base-'+n"
       :data-base-id="n"
       class='base-insert'
@@ -230,24 +230,23 @@ function pushBase(this: any, baseId: string, base: string) : void {
   this.updateAminoAcids();
 }
 
-function selectBaseByTextInsertion(this: any, e: KeyboardEvent) : void {
-  if (!(e.target instanceof HTMLInputElement)) {
+function selectBaseByTextInsertion(this: any, target: HTMLInputElement) : void {
+  if (!(target instanceof HTMLInputElement)) {
     return;
   }
-  else if (e.target.validity.patternMismatch) {
-    // animateShake();
-    this.selectedInput(e.target);
-    if (typeof e.target.dataset.baseId === 'string' && this.bases[e.target.dataset.baseId]) {
-      this.bases[e.target.dataset.baseId] = '';
+  else if (target.validity.patternMismatch) {
+    this.selectedInput(target);
+    if (typeof target.dataset.baseId === 'string' && this.bases[target.dataset.baseId]) {
+      this.bases[target.dataset.baseId] = '';
       this.updateAminoAcids();
     }
 
     return;
   }
 
-  e.target.value = e.target.value.toUpperCase();
-  this.pushBase(e.target.dataset.baseId, e.target.value);
-  if (this.mode === EMode.AUTO) {
+  target.value = target.value.toUpperCase();
+  this.pushBase(target.dataset.baseId, target.value);
+  if (!this.editMode && this.mode === EMode.AUTO) {
     this.maybeSubmitCodon();
   }
 
