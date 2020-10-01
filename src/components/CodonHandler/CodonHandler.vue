@@ -12,6 +12,7 @@
   <section class='base-display'>
     <input required v-for="n in 3"
       @click="selectedInput($event.target)"
+      @touchstart="selectedInput($event.target)"
       @blur="maybeResetSelectedInput"
       @input="selectBaseByTextInsertion"
       :id="'base-'+n"
