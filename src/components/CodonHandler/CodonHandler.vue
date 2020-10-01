@@ -284,6 +284,7 @@ export default {
         '2': '',
         '3': ''
       },
+      blurLocked: false,
       currentlySelectedInput: null,
       mode: EMode.MANUAL,
       possibleAminoAcids: []
