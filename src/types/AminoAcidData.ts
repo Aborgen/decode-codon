@@ -122,7 +122,7 @@ export default class AminoAcidData {
     this.codonList = [];
   }
 
-  length() : void {
+  length() : number {
     return this.aminoAcidList.length;
   }
 }
