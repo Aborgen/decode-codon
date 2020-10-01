@@ -52,8 +52,8 @@ import { Codon } from 'types/Codon.ts';
 import CodonTable from 'data/CodonTable';
 
 enum EMode {
-  AUTO,
-  MANUAL
+  MANUAL,
+  AUTO
 }
 
 // Keeping track of the currently selected input allows the user to click on an input, and then change it by clicking one of the buttons
