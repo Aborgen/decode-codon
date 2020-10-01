@@ -81,11 +81,16 @@ function unlockBaseInputBlur(this: any) : void {
 }
 
 function maybeResetSelectedInput(this: any) : void {
-  if (this.blurLocked) {
+  if (this.blurLocked || this.currentlySelectedInput === null) {
     return;
   }
 
-  this.currentlySelectedInput = null;
+  this.lockBaseInputBlur();
+  {
+    this.currentlySelectedInput.blur();
+    this.currentlySelectedInput = null;
+  }
+  this.unlockBaseInputBlur();
 }
 
 function isModeAuto(this: any) : boolean {
