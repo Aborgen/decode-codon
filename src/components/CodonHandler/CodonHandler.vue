@@ -56,14 +56,20 @@ enum EMode {
   AUTO
 }
 
-// Keeping track of the currently selected input allows the user to click on an input, and then change it by clicking one of the buttons
+// Keeping track of the currently selected input allows the user to click on an input, and then set its value by clicking one of the buttons
 function selectedInput(this: any, input: HTMLInputElement) : void {
   if (!(input instanceof HTMLInputElement)) {
-    return;
+    throw 'Can only select input elements!';
   }
 
-  this.currentlySelectedInput = input;
-  input.select();
+  // Prevents blur event callback on input elements
+  this.lockBaseInputBlur();
+  {
+    this.currentlySelectedInput = input;
+    input.focus();
+    input.select();
+  }
+  this.unlockBaseInputBlur();
 }
 
 function lockBaseInputBlur(this: any) : void {
