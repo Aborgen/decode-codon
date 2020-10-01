@@ -122,9 +122,8 @@ function collectBases(this: any) : string | null {
 }
 
 function maybeSubmitCodon(this: any) : void {
-  // This method should not be invoked while editing a codon
   if (this.editMode) {
-    return;
+    throw 'Cannot submit a codon when editMode is true';
   }
 
   const codon:string = this.collectBases();
