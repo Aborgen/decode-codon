@@ -26,7 +26,7 @@
       <button v-for="base in ['U', 'C', 'A', 'G']"
         @mousedown="lockBaseInputBlur"
         @touchstart="lockBaseInputBlur"
-        @click="selectBaseByButton"
+        @click="selectBaseByButton($event.target)"
         :data-base-value="base"
         class='base-button'>{{ base }}</button>
     </div>
@@ -253,8 +253,8 @@ function selectBaseByTextInsertion(this: any, target: HTMLInputElement) : void {
   this.getNextEmptyInput();
 }
 
-function selectBaseByButton (this: any, e: MouseEvent) : void {
-  if (!(e.target instanceof HTMLButtonElement)) {
+function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
+  if (!(target instanceof HTMLButtonElement)) {
     return;
   }
 
@@ -263,9 +263,9 @@ function selectBaseByButton (this: any, e: MouseEvent) : void {
     return;
   }
 
-  nextInput.value = e.target.dataset.baseValue as string;
+  nextInput.value = target.dataset.baseValue as string;
   this.pushBase(nextInput.dataset.baseId, nextInput.value);
-  if (this.mode === EMode.AUTO) {
+  if (!this.editMode && this.mode === EMode.AUTO) {
     this.maybeSubmitCodon();
   }
 
