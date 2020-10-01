@@ -197,7 +197,7 @@ function resetInputs(this: any) : void {
 function getNextEmptyInput(this: any) : HTMLInputElement | null {
   const inputs:NodeListOf<HTMLInputElement> = document.querySelectorAll('.base-insert');
   if (!inputs) {
-    return null;
+    throw 'Either DOM is not loaded, or some structure has changed: Missing input elements with class .base-insert';
   }
 
   let nextInput:HTMLInputElement | null = null;
@@ -210,6 +210,9 @@ function getNextEmptyInput(this: any) : HTMLInputElement | null {
 
   if (nextInput === null) {
     this.maybeResetSelectedInput();
+  }
+  else {
+    this.selectedInput(nextInput);
   }
 
   return nextInput;
@@ -248,12 +251,7 @@ function selectBaseByTextInsertion(this: any, e: KeyboardEvent) : void {
     this.maybeSubmitCodon();
   }
 
-  const nextInput:HTMLInputElement = this.getNextEmptyInput();
-  if (!nextInput) {
-    return;
-  }
-
-  this.selectedInput(nextInput);
+  this.getNextEmptyInput();
 }
 
 function selectBaseByButton (this: any, e: MouseEvent) : void {
@@ -274,12 +272,7 @@ function selectBaseByButton (this: any, e: MouseEvent) : void {
 
   // this.lockBaseInputBlur is invoked during the value button's mousedown and touchstart events
   this.unlockBaseInputBlur();
-  nextInput = this.getNextEmptyInput();
-  if (!nextInput) {
-    return;
-  }
-
-  this.selectedInput(nextInput);
+  this.getNextEmptyInput();
 }
 
 export default {
