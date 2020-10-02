@@ -1,5 +1,14 @@
-import { mount } from '@vue/test-utils';
+import { initWrapperGenerator, clearDOM } from 'tests/utils.js';
 import CodonHandler from 'components/CodonHandler/CodonHandler';
+
+const props = {
+    editMode: false, 
+    notifyParentToggleEditMode: function() {}, 
+    onCodonEdit: function() {}, 
+    onCodonSubmit: function() {}
+}
+
+const { generateWrapper, mountWrapper, mountAttachedWrapper } = initWrapperGenerator(CodonHandler, props);
 
 describe('CodonHandler has several private methods available to it, most involve mutating state, some are helpers', () => {
   afterEach(() => {
@@ -372,35 +381,3 @@ function onCodonSubmit(result) {
   return (codon) => result.hasInvokedCallback = true;
 }
 
-// If this function is used, it is necessary to use clearDOM() after each test
-function mountAttachedWrapper() {
-  const id = 'root';
-  if (document.getElementById(id)) {
-    throw 'Duplicate root node: please use clearDOM after each test';
-  }
-
-  const root = document.createElement('div');
-  root.id = id;
-  document.body.appendChild(root);
-  return generateWrapper(`#${id}`);
-}
-
-function clearDOM() {
-  document.getElementsByTagName('html')[0].innerHTML = '';
-}
-
-function mountWrapper() {
-  return generateWrapper();
-}
-
-function generateWrapper(root = null) {
-  return mount(CodonHandler, {
-    attachTo: root,
-    propsData: {
-      editMode: false,
-      notifyParentToggleEditMode: function() {},
-      onCodonEdit: function() {},
-      onCodonSubmit: function() {}
-    }
-  });
-}
