@@ -2,13 +2,12 @@ import { initWrapperGenerator, clearDOM } from 'tests/utils.js';
 import CodonHandler from 'components/CodonHandler/CodonHandler';
 
 const props = {
-    editMode: false, 
-    notifyParentToggleEditMode: function() {}, 
-    onCodonEdit: function() {}, 
-    onCodonSubmit: function() {}
-}
-
 const { generateWrapper, mountWrapper, mountAttachedWrapper } = initWrapperGenerator(CodonHandler, props);
+  editMode: false,
+  notifyParentToggleEditMode: function() {},
+  onCodonEdit: function() {},
+  onCodonSubmit: function() {}
+};
 
 describe('CodonHandler has several private methods available to it, most involve mutating state, some are helpers', () => {
   afterEach(() => {
@@ -107,36 +106,35 @@ describe('CodonHandler has several private methods available to it, most involve
 
   test('maybeSubmitCodon will do nothing if editMode is false and there are base data fields that are blank' ,() => {
     const wrapper = mountWrapper();
+    const mockFunction = jest.fn();
     expect(wrapper.vm.editMode).toBe(false);
-    let result = { hasInvokedCallback: false };
-    wrapper.setProps({ onCodonSubmit: onCodonSubmit(result) });
+    wrapper.setProps({ onCodonSubmit: mockFunction });
     wrapper.vm.bases['1'] = '';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
     wrapper.vm.maybeSubmitCodon();
-    expect(result.hasInvokedCallback).toBe(false);
+    expect(mockFunction).not.toHaveBeenCalled();
   });
 
-//  test('maybeSubmitCodon will call parent callback and clear base data fields', () => {
   test('maybeSubmitCodon will call parent callback and clear base data fields', () => {
     const wrapper = mountAttachedWrapper();
+    const mockFunction = jest.fn();
     expect(wrapper.vm.editMode).toBe(false);
-    const result = { hasInvokedCallback: false };
-    wrapper.setProps({ onCodonSubmit: onCodonSubmit(result) });
+    wrapper.setProps({ onCodonSubmit: mockFunction });
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
     wrapper.vm.maybeSubmitCodon();
-    expect(result.hasInvokedCallback).toBe(true);
+    expect(mockFunction).toHaveBeenCalled();
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
     wrapper.destroy();
   });
 
   test('editCodon will call parent callback and clear base data fields', () => {
     const wrapper = mountAttachedWrapper();
-    const result = { hasInvokedCallback: false };
+    const mockFunction = jest.fn();
     wrapper.setProps({
-      onCodonEdit: onCodonEdit(result),
+      onCodonEdit: mockFunction,
       editMode: true
     });
 
@@ -144,23 +142,23 @@ describe('CodonHandler has several private methods available to it, most involve
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
     wrapper.vm.editCodon();
-    expect(result.hasInvokedCallback).toBe(true);
+    expect(mockFunction).toHaveBeenCalled();
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
     wrapper.destroy();
   });
 
   test('editCodon does nothing if any base data inputs are empty', () => {
     const wrapper = mountWrapper();
-    const result = { hasInvokedCallback: false };
+    const mockFunction = jest.fn();
     wrapper.setProps({
-      onCodonEdit: onCodonEdit(result),
+      onCodonEdit: mockFunction,
       editMode: true
     });
 
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
     wrapper.vm.editCodon();
-    expect(result.hasInvokedCallback).toBe(false);
+    expect(mockFunction).not.toHaveBeenCalled();
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': 'U', '3': 'U' });
   });
 
@@ -372,12 +370,3 @@ describe('CodonHandler has a few methods that involve the DOM', () => {
     wrapper.destroy();
   });
 });
-
-function onCodonEdit(result) {
-  return (codon) => result.hasInvokedCallback = true;
-}
-
-function onCodonSubmit(result) {
-  return (codon) => result.hasInvokedCallback = true;
-}
-
