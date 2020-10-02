@@ -5,10 +5,31 @@ function clearDOM() {
 }
 
 function generateWrapper(component, props) {
-  return (root = null) => mount(component, {
-    propsData: props,
-    attachTo: root
-  }); 
+  return (root = null) => new Proxy(
+    {
+      wrapper: mount(component, {
+        propsData: props,
+        attachTo: root
+      }),
+      destroy: function() {
+        if (root !== null) {
+          clearDOM();
+          this.wrapper.destroy();
+          this.wrapper = null;
+        }
+      }
+    },
+    {
+      get: function(obj, prop, receiver) {
+        // If the property is a part of the above object, then pass it through
+        if (prop in obj) {
+          return Reflect.get(...arguments);
+        }
+        else {
+          return obj.wrapper[prop];
+        }
+    }
+  });
 }
 
 // If this function is used, it is necessary to use clearDOM() after each test
@@ -35,9 +56,8 @@ function initWrapperGenerator(component, props) {
   const attached = mountAttachedWrapper(generator);
   const unattached = mountWrapper(generator);
   return {
-    'generateWrapper': generator,
-    'mountAttachedWrapper': attached,
-    'mountWrapper': unattached
+    mountAttachedWrapper: attached,
+    mountWrapper: unattached
   };
 }
 

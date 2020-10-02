@@ -1,19 +1,15 @@
-import { initWrapperGenerator, clearDOM } from 'tests/utils.js';
+import { initWrapperGenerator } from 'tests/utils.js';
 import CodonHandler from 'components/CodonHandler/CodonHandler';
 
 const props = {
-const { generateWrapper, mountWrapper, mountAttachedWrapper } = initWrapperGenerator(CodonHandler, props);
   editMode: false,
   notifyParentToggleEditMode: function() {},
   onCodonEdit: function() {},
   onCodonSubmit: function() {}
 };
 
+const { mountWrapper, mountAttachedWrapper } = initWrapperGenerator(CodonHandler, props);
 describe('CodonHandler has several private methods available to it, most involve mutating state, some are helpers', () => {
-  afterEach(() => {
-    clearDOM(); 
-  });
-
   test('collectBases returns concatenated strings in state if all are filled', () => {
     const wrapper = mountWrapper();
     wrapper.vm.bases['1'] = 'U';
@@ -212,10 +208,6 @@ describe('CodonHandler has several private methods available to it, most involve
 });
 
 describe('CodonHandler has a few methods that involve the DOM', () => {
-  afterEach(() => {
-    clearDOM();
-  });
-
   test('getNextEmptyInput returns the next HTMLInputElement that has an empty value', () => {
     const wrapper = mountAttachedWrapper();
     wrapper.vm.currentlySelectedInput = '';
