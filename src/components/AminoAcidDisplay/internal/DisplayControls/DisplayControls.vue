@@ -33,6 +33,8 @@ function deleteCodon(this: any) : void {
   }
 }
 
+// If user inputs a number less than 1 when there is at least one element in chain, then the number is replaced with 1.
+// If user inputs a number > chainLength, it is replaced with chainLength.
 function handleKeyboardSelect(this: any, target: HTMLInputElement) : void {
   if (!(target instanceof HTMLInputElement)) {
     return;
