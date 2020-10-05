@@ -1,4 +1,4 @@
-import { initWrapperGenerator } from 'tests/utils.js';
+import { initWrapperGenerator, clearDOM } from 'tests/utils.js';
 import DisplayControls from 'components/AminoAcidDisplay/internal/DisplayControls/DisplayControls';
 import Vue from 'vue';
 
@@ -10,7 +10,7 @@ const props = {
   onClearLists: function() {}
 };
 
-const { mountWrapper, mountAttachedWrapper } = initWrapperGenerator(DisplayControls, props);
+const { mountWrapper } = initWrapperGenerator(DisplayControls, props);
 describe('DisplayControls has several private methods available to it, most involve mutating state, some are helpers', () => {
   test('deleteCodon invokes callback from parent if user confirms', () => {
     const wrapper = mountWrapper();
@@ -60,7 +60,7 @@ describe('DisplayControls has several private methods available to it, most invo
     expect(mockFunction).toHaveBeenCalled();
   });
 
-  test.only('handleKeyboardSelect will set selectedAminoAcid if (user\'s input - 1) !== selectedAminoAcid', () => {
+  test('handleKeyboardSelect will set selectedAminoAcid if (user\'s input - 1) !== selectedAminoAcid', () => {
     const wrapper = mountWrapper();
     const mockFunction = jest.fn();
     // If I use wrapper.setProps, the test hangs
@@ -100,5 +100,142 @@ describe('DisplayControls has several private methods available to it, most invo
     wrapper.vm.handleKeyboardSelect(input);
     expect(mockFunction).not.toHaveBeenCalled();
     expect(mockBlur).not.toHaveBeenCalled();
+  });
+
+  test('handleSelectButtonClick will invoke setSelectedAminoAcid if selectedAminoAcid is null', () => {
+    const mockSelectFunction = jest.fn();
+    const mockUnselectFunction = jest.fn();
+    const wrapper = mountWrapper();
+    expect(wrapper.vm.selectedAminoAcid).toBeNull();
+
+    wrapper.vm.setSelectedAminoAcid = mockSelectFunction;
+    wrapper.vm.unsetSelectedAminoAcid = mockUnselectFunction;
+    wrapper.vm.handleSelectButtonClick();
+    expect(mockSelectFunction).toHaveBeenCalled();
+    expect(mockUnselectFunction).not.toHaveBeenCalled();
+  });
+
+  test('handleSelectButtonClick will invoke setSelectedAminoAcid if selectedAminoAcid is not null and is different from searchBoxValue', () => {
+    const mockSelectFunction = jest.fn();
+    const mockUnselectFunction = jest.fn();
+    const wrapper = mountWrapper();
+    wrapper.setProps({ selectedAminoAcid: 1 });
+    wrapper.vm.searchBoxValue = 0;
+    wrapper.vm.setSelectedAminoAcid = mockSelectFunction;
+    wrapper.vm.unsetSelectedAminoAcid = mockUnselectFunction;
+    wrapper.vm.handleSelectButtonClick();
+    expect(mockSelectFunction).toHaveBeenCalled();
+    expect(mockUnselectFunction).not.toHaveBeenCalled();
+  });
+
+  test('handleSelectButtonClick will invoke unsetSelectedAminoAcid if selectedAminoAcid is not null and is equal to searchBoxValue', () => {
+    const mockSelectFunction = jest.fn();
+    const mockUnselectFunction = jest.fn();
+    const wrapper = mountWrapper();
+    wrapper.setProps({ selectedAminoAcid: 0 });
+    wrapper.vm.searchBoxValue = 0;
+    wrapper.vm.setSelectedAminoAcid = mockSelectFunction;
+    wrapper.vm.unsetSelectedAminoAcid = mockUnselectFunction;
+    wrapper.vm.handleSelectButtonClick();
+    expect(mockSelectFunction).not.toHaveBeenCalled();
+    expect(mockUnselectFunction).toHaveBeenCalled();
+  });
+
+  test('setSelectedAminoAcid delegates to prop function if number in search box input is valid', () => {
+    const wrapper = mountWrapper();
+    const mockFunction = jest.fn();
+    wrapper.setProps({
+      notifyParentSelectAminoAcid: mockFunction,
+      chainLength: 5
+    });
+
+    const input = document.createElement('input');
+    input.id = 'search-box';
+    input.value = '3';
+    document.body.appendChild(input);
+
+    wrapper.vm.setSelectedAminoAcid();
+    expect(mockFunction).toHaveBeenCalled();
+    clearDOM();
+  });
+
+  test('setSelectedAminoAcid does nothing if value in search box input is not a number', () => {
+    const wrapper = mountWrapper();
+    const mockFunction = jest.fn();
+    wrapper.setProps({
+      notifyParentSelectAminoAcid: mockFunction,
+      chainLength: 5
+    });
+
+    const input = document.createElement('input');
+    input.id = 'search-box';
+    input.value = 'hello';
+    document.body.appendChild(input);
+
+    wrapper.vm.setSelectedAminoAcid();
+    expect(mockFunction).not.toHaveBeenCalled();
+    clearDOM();
+  });
+
+  test('setSelectedAminoAcid does nothing if number in search box is less than 0', () => {
+    const wrapper = mountWrapper();
+    const mockFunction = jest.fn();
+    wrapper.setProps({
+      notifyParentSelectAminoAcid: mockFunction,
+      chainLength: 5
+    });
+
+    const input = document.createElement('input');
+    input.id = 'search-box';
+    input.value = '-5';
+    document.body.appendChild(input);
+
+    wrapper.vm.setSelectedAminoAcid();
+    expect(mockFunction).not.toHaveBeenCalled();
+    clearDOM();
+  });
+
+  test('setSelectedAminoAcid does nothing if number in search box is greater than chainLength', () => {
+    const wrapper = mountWrapper();
+    const mockFunction = jest.fn();
+    wrapper.setProps({
+      notifyParentSelectAminoAcid: mockFunction,
+      chainLength: 5
+    });
+
+    const input = document.createElement('input');
+    input.id = 'search-box';
+    input.value = '6';
+    document.body.appendChild(input);
+
+    wrapper.vm.setSelectedAminoAcid();
+    expect(mockFunction).not.toHaveBeenCalled();
+    clearDOM();
+  });
+
+  test('toggleEditMode delegates to prop function', () => {
+    const wrapper = mountWrapper();
+    wrapper.setProps({ selectedAminoAcid: 1 });
+    const mockFunction = jest.fn();
+    wrapper.setProps({ notifyParentToggleEditMode: mockFunction });
+    wrapper.vm.toggleEditMode();
+    expect(mockFunction).toHaveBeenCalled();
+  });
+
+  test('toggleEditMode does nothing if selectedAminoAcid is null', () => {
+    const wrapper = mountWrapper();
+    expect(wrapper.vm.selectedAminoAcid).toBeNull();
+    const mockFunction = jest.fn();
+    wrapper.setProps({ notifyParentToggleEditMode: mockFunction });
+    wrapper.vm.toggleEditMode();
+    expect(mockFunction).not.toHaveBeenCalled();
+  });
+
+  test('unsetSelectedAminoAcid delegates to prop function', () => {
+    const wrapper = mountWrapper();
+    const mockFunction = jest.fn();
+    wrapper.setProps({ notifyParentDeselectAminoAcid: mockFunction });
+    wrapper.vm.unsetSelectedAminoAcid();
+    expect(mockFunction).toHaveBeenCalled();
   });
 });
