@@ -68,7 +68,7 @@ function handleSelectButtonClick(this: any) : void {
 function setSelectedAminoAcid(this: any) : void {
   const input:HTMLInputElement = document.getElementById('search-box') as HTMLInputElement;
   if (!(input instanceof HTMLInputElement)) {
-    return;
+    throw 'Either DOM is not loaded, or some structure has changed: Missing input element with id #search-box';
   }
 
   const i = Number.parseInt(input.value) - 1;
