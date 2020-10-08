@@ -68,6 +68,7 @@ describe('CodonHandler\'s appearance changes depending on editMode prop', () => 
     await button.trigger('click');
     expect(mockSubmit).toHaveBeenCalled();
     expect(mockEdit).not.toHaveBeenCalled();
+    wrapper.destroy();
   });
 
   test('Submit button\'s click event will involve editing a codon if editMode is false', async () => {
@@ -84,6 +85,7 @@ describe('CodonHandler\'s appearance changes depending on editMode prop', () => 
     await button.trigger('click');
     expect(mockSubmit).not.toHaveBeenCalled();
     expect(mockEdit).toHaveBeenCalled();
+    wrapper.destroy();
   });
 
   test('Toggle button is enabled when editMode is false', () => {
@@ -94,6 +96,7 @@ describe('CodonHandler\'s appearance changes depending on editMode prop', () => 
     expect(button.exists()).toBe(true);
     expect(button.element.tagName.toLowerCase()).toBe('button');
     expect(button.attributes('disabled')).toBeFalsy();
+    wrapper.destroy();
   });
 
   test('Toggle button is disabled when editMode is true', async () => {
@@ -104,5 +107,6 @@ describe('CodonHandler\'s appearance changes depending on editMode prop', () => 
     expect(button.exists()).toBe(true);
     expect(button.element.tagName.toLowerCase()).toBe('button');
     expect(button.attributes('disabled')).toBeTruthy();
+    wrapper.destroy();
   });
 });
