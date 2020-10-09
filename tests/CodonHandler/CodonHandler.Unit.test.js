@@ -93,18 +93,18 @@ describe('CodonHandler has several private methods available to it, most involve
     expect(wrapper.vm.mode).toBe(0);
   });
 
-  test('maybeSubmitCodon will throw if editMode is true' ,() => {
+  test('maybeSubmitCodon will throw if editMode is true', async () => {
     const wrapper = mountWrapper();
-    wrapper.setProps({ editMode: true });
     const result = () => wrapper.vm.maybeSubmitCodon();
+    await wrapper.setProps({ editMode: true });
     expect(result).toThrow();
   });
 
-  test('maybeSubmitCodon will do nothing if editMode is false and there are base data fields that are blank' ,() => {
+  test('maybeSubmitCodon will do nothing if editMode is false and there are base data fields that are blank', async () => {
     const wrapper = mountWrapper();
     const mockFunction = jest.fn();
     expect(wrapper.vm.editMode).toBe(false);
-    wrapper.setProps({ onCodonSubmit: mockFunction });
+    await wrapper.setProps({ onCodonSubmit: mockFunction });
     wrapper.vm.bases['1'] = '';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
@@ -112,11 +112,11 @@ describe('CodonHandler has several private methods available to it, most involve
     expect(mockFunction).not.toHaveBeenCalled();
   });
 
-  test('maybeSubmitCodon will call parent callback and clear base data fields', () => {
+  test('maybeSubmitCodon will call parent callback and clear base data fields', async () => {
     const wrapper = mountAttachedWrapper();
     const mockFunction = jest.fn();
     expect(wrapper.vm.editMode).toBe(false);
-    wrapper.setProps({ onCodonSubmit: mockFunction });
+    await wrapper.setProps({ onCodonSubmit: mockFunction });
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
@@ -126,10 +126,10 @@ describe('CodonHandler has several private methods available to it, most involve
     wrapper.destroy();
   });
 
-  test('editCodon will call parent callback and clear base data fields', () => {
+  test('editCodon will call parent callback and clear base data fields', async () => {
     const wrapper = mountAttachedWrapper();
     const mockFunction = jest.fn();
-    wrapper.setProps({
+    await wrapper.setProps({
       onCodonEdit: mockFunction,
       editMode: true
     });
@@ -143,10 +143,10 @@ describe('CodonHandler has several private methods available to it, most involve
     wrapper.destroy();
   });
 
-  test('editCodon does nothing if any base data inputs are empty', () => {
+  test('editCodon does nothing if any base data inputs are empty', async () => {
     const wrapper = mountWrapper();
     const mockFunction = jest.fn();
-    wrapper.setProps({
+    await wrapper.setProps({
       onCodonEdit: mockFunction,
       editMode: true
     });
@@ -158,10 +158,10 @@ describe('CodonHandler has several private methods available to it, most involve
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': 'U', '3': 'U' });
   });
 
-  test('editCodon will throw if editMode is false', () => {
+  test('editCodon will throw if editMode is false', async () => {
     const wrapper = mountWrapper();
-    wrapper.setProps({ editMode: false });
     const result = () => wrapper.vm.editCodon();
+    await wrapper.setProps({ editMode: false });
     expect(result).toThrow();
   });
 
