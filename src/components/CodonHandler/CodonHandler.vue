@@ -12,7 +12,6 @@
   <section class='base-display'>
     <input required v-for="n in 3"
       @click="selectedInput($event.target)"
-      @touchstart="selectedInput($event.target)"
       @blur="maybeResetSelectedInput"
       @input="selectBaseByTextInsertion($event.target)"
       :id="'base-'+n"
@@ -25,7 +24,6 @@
     <div class='base-button-group'>
       <button v-for="base in ['U', 'C', 'A', 'G']"
         @mousedown="lockBaseInputBlur"
-        @touchstart="lockBaseInputBlur"
         @click="selectBaseByButton($event.target)"
         :data-base-value="base"
         class='base-button'>{{ base }}</button>
@@ -258,7 +256,7 @@ function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
     return;
   }
 
-  // this.lockBaseInputBlur is invoked during the target button's mousedown and touchstart events
+  // this.lockBaseInputBlur is invoked during the target button's mousedown events
   this.unlockBaseInputBlur();
   let nextInput:HTMLInputElement = this.currentlySelectedInput || this.getNextEmptyInput();
   if (!nextInput) {
