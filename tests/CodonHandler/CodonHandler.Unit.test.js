@@ -15,6 +15,7 @@ describe('CodonHandler has several private methods available to it, most involve
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
+
     const result = wrapper.vm.collectBases();
     expect(result).toBe('UUU');
   });
@@ -23,6 +24,7 @@ describe('CodonHandler has several private methods available to it, most involve
     const wrapper = mountWrapper();
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
+
     const result = wrapper.vm.collectBases();
     expect(result).toBeNull();
   });
@@ -45,6 +47,7 @@ describe('CodonHandler has several private methods available to it, most involve
     const wrapper = mountWrapper();
     expect(wrapper.vm.blurLocked).toBe(false);
     wrapper.vm.currentlySelectedInput = document.createElement('input');
+
     wrapper.vm.maybeResetSelectedInput();
     expect(wrapper.vm.currentlySelectedInput).toBeNull();
   });
@@ -53,6 +56,7 @@ describe('CodonHandler has several private methods available to it, most involve
     const wrapper = mountWrapper();
     wrapper.vm.blurLocked = true;
     wrapper.vm.currentlySelectedInput = '';
+
     wrapper.vm.maybeResetSelectedInput();
     expect(wrapper.vm.currentlySelectedInput).toBe('');
   });
@@ -64,9 +68,10 @@ describe('CodonHandler has several private methods available to it, most involve
     wrapper.vm.bases['3'] = 'U';
     wrapper.vm.currentlySelectedInput = document.createElement('input');
     wrapper.vm.possibleAminoAcids = [''];
+
     wrapper.vm.resetInputs();
-    expect(wrapper.vm.currentlySelectedInput).toBeNull();
     expect(wrapper.vm.bases).toStrictEqual({'1': '', '2': '', '3': ''});
+    expect(wrapper.vm.currentlySelectedInput).toBeNull();
     expect(wrapper.vm.possibleAminoAcids).toStrictEqual([]);
     wrapper.destroy();
   });
@@ -103,11 +108,12 @@ describe('CodonHandler has several private methods available to it, most involve
   test('maybeSubmitCodon will do nothing if editMode is false and there are base data fields that are blank', async () => {
     const wrapper = mountWrapper();
     const mockFunction = jest.fn();
-    expect(wrapper.vm.editMode).toBe(false);
     await wrapper.setProps({ onCodonSubmit: mockFunction });
     wrapper.vm.bases['1'] = '';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
+    expect(wrapper.vm.editMode).toBe(false);
+
     wrapper.vm.maybeSubmitCodon();
     expect(mockFunction).not.toHaveBeenCalled();
   });
@@ -115,11 +121,12 @@ describe('CodonHandler has several private methods available to it, most involve
   test('maybeSubmitCodon will call parent callback and clear base data fields', async () => {
     const wrapper = mountAttachedWrapper();
     const mockFunction = jest.fn();
-    expect(wrapper.vm.editMode).toBe(false);
     await wrapper.setProps({ onCodonSubmit: mockFunction });
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
+    expect(wrapper.vm.editMode).toBe(false);
+
     wrapper.vm.maybeSubmitCodon();
     expect(mockFunction).toHaveBeenCalled();
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
@@ -137,6 +144,7 @@ describe('CodonHandler has several private methods available to it, most involve
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
+
     wrapper.vm.editCodon();
     expect(mockFunction).toHaveBeenCalled();
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
@@ -153,6 +161,7 @@ describe('CodonHandler has several private methods available to it, most involve
 
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
+
     wrapper.vm.editCodon();
     expect(mockFunction).not.toHaveBeenCalled();
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': 'U', '3': 'U' });
@@ -202,6 +211,7 @@ describe('CodonHandler has several private methods available to it, most involve
     wrapper.vm.bases['1'] = a;
     wrapper.vm.bases['2'] = b;
     wrapper.vm.bases['3'] = c;
+
     wrapper.vm.updateAminoAcids();
     expect(wrapper.vm.possibleAminoAcids).toStrictEqual(['?']);
   });
@@ -210,22 +220,23 @@ describe('CodonHandler has several private methods available to it, most involve
 describe('CodonHandler has a few methods that involve the DOM', () => {
   test('getNextEmptyInput returns the next HTMLInputElement that has an empty value', () => {
     const wrapper = mountAttachedWrapper();
-    wrapper.vm.currentlySelectedInput = '';
     const bases = wrapper.findAll('.base-insert');
+    wrapper.vm.currentlySelectedInput = '';
     bases.at(0).element.value = 'U';
+
     const result = wrapper.vm.getNextEmptyInput();
-    expect(result).toStrictEqual(bases.at(1).element);
     expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(1).element);
+    expect(result).toStrictEqual(bases.at(1).element);
     wrapper.destroy();
   });
 
   test('getNextEmptyInput returns null if there are no empty HTMLInputElements and sets currentlySelectedInput to null', () => {
     const wrapper = mountAttachedWrapper();
     const bases = wrapper.findAll('.base-insert');
+    wrapper.vm.currentlySelectedInput = bases.at(0).element;
     bases.at(0).element.value = 'U';
     bases.at(1).element.value = 'U';
     bases.at(2).element.value = 'U';
-    wrapper.vm.currentlySelectedInput = bases.at(0).element;
 
     const result = wrapper.vm.getNextEmptyInput();
     expect(result).toBeNull();
@@ -236,58 +247,55 @@ describe('CodonHandler has a few methods that involve the DOM', () => {
   test('selectBaseByButton will use button data property to set base data input when there are any empty, and also selects next empty, if any', () => {
     const wrapper = mountAttachedWrapper();
     const bases = wrapper.findAll('.base-insert');
-    bases.at(0).element.value = 'U';
+    const button = document.createElement('button');
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.blurLocked = true;
-
-    const button = document.createElement('button');
+    bases.at(0).element.value = 'U';
     button.dataset.baseValue = 'U';
-    wrapper.vm.selectBaseByButton(button);
 
-    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(2).element);
+    wrapper.vm.selectBaseByButton(button);
     expect(wrapper.vm.bases).toStrictEqual({ '1': 'U', '2': 'U', '3': '' });
     expect(wrapper.vm.blurLocked).toBe(false);
+    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(2).element);
     wrapper.destroy();
   });
 
   test('selectBaseByButton will do nothing if all base data inputs are filled', () => {
     const wrapper = mountAttachedWrapper();
     const bases = wrapper.findAll('.base-insert');
-    bases.at(0).element.value = 'U';
-    bases.at(1).element.value = 'U';
-    bases.at(2).element.value = 'U';
+    const button = document.createElement('button');
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.bases['3'] = 'U';
     wrapper.vm.blurLocked = true;
-
-    const button = document.createElement('button');
+    bases.at(0).element.value = 'U';
+    bases.at(1).element.value = 'U';
+    bases.at(2).element.value = 'U';
     button.dataset.baseValue = 'U';
-    wrapper.vm.selectBaseByButton(button);
 
-    expect(wrapper.vm.currentlySelectedInput).toBeNull();
+    wrapper.vm.selectBaseByButton(button);
     expect(wrapper.vm.bases).toStrictEqual({ '1': 'U', '2': 'U', '3': 'U' });
     expect(wrapper.vm.blurLocked).toBe(false);
+    expect(wrapper.vm.currentlySelectedInput).toBeNull();
     wrapper.destroy();
   });
 
   test('selectBaseByButton will automatically commit codon when mode is EMode.AUTO, and highlight the first input element', () => {
     const wrapper = mountAttachedWrapper();
     const bases = wrapper.findAll('.base-insert');
-    bases.at(0).element.value = 'U';
-    bases.at(1).element.value = 'U';
+    const button = document.createElement('button');
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.bases['2'] = 'U';
     wrapper.vm.blurLocked = true;
     wrapper.vm.mode = 1;
-
-    const button = document.createElement('button');
+    bases.at(0).element.value = 'U';
+    bases.at(1).element.value = 'U';
     button.dataset.baseValue = 'U';
-    wrapper.vm.selectBaseByButton(button);
 
-    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(0).element);
+    wrapper.vm.selectBaseByButton(button);
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
     expect(wrapper.vm.blurLocked).toBe(false);
+    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(0).element);
     wrapper.destroy();
   });
 
@@ -296,27 +304,26 @@ describe('CodonHandler has a few methods that involve the DOM', () => {
     const bases = wrapper.findAll('.base-insert');
     const input = bases.at(0).element;
     input.value = 'U';
-    wrapper.vm.selectBaseByTextInsertion(input);
 
-    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(1).element);
+    wrapper.vm.selectBaseByTextInsertion(input);
     expect(wrapper.vm.bases).toStrictEqual({ '1': 'U', '2': '', '3': '' });
+    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(1).element);
     wrapper.destroy();
   });
 
   test('selectBaseByTextInsertion sets currentlySelectedInput to null if inserted base is last unfilled', () => {
     const wrapper = mountAttachedWrapper();
     const bases = wrapper.findAll('.base-insert');
-    bases.at(0).element.value = 'U';
-    bases.at(1).element.value = 'U';
+    const input = bases.at(2).element;
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.bases['2'] = 'U';
-
-    const input = bases.at(2).element;
+    bases.at(0).element.value = 'U';
+    bases.at(1).element.value = 'U';
     input.value = 'U';
-    wrapper.vm.selectBaseByTextInsertion(input);
 
-    expect(wrapper.vm.currentlySelectedInput).toBeNull();
+    wrapper.vm.selectBaseByTextInsertion(input);
     expect(wrapper.vm.bases).toStrictEqual({ '1': 'U', '2': 'U', '3': 'U' });
+    expect(wrapper.vm.currentlySelectedInput).toBeNull();
     wrapper.destroy();
   });
 
@@ -325,10 +332,10 @@ describe('CodonHandler has a few methods that involve the DOM', () => {
     const bases = wrapper.findAll('.base-insert');
     const input = bases.at(0).element;
     input.value = 'Bad input';
-    wrapper.vm.selectBaseByTextInsertion(input);
 
-    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(input);
+    wrapper.vm.selectBaseByTextInsertion(input);
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
+    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(input);
     wrapper.destroy();
   });
 
@@ -339,8 +346,8 @@ describe('CodonHandler has a few methods that involve the DOM', () => {
     input.value = 'u';
     wrapper.vm.selectBaseByTextInsertion(input);
 
-    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(1).element);
     expect(wrapper.vm.bases).toStrictEqual({ '1': 'U', '2': '', '3': '' });
+    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(1).element);
     wrapper.destroy();
   });
 
@@ -348,6 +355,7 @@ describe('CodonHandler has a few methods that involve the DOM', () => {
     const wrapper = mountAttachedWrapper();
     const input = document.createElement('input');
     document.body.appendChild(input);
+
     wrapper.vm.selectedInput(input);
     expect(wrapper.vm.currentlySelectedInput).toStrictEqual(input);
     expect(wrapper.vm.currentlySelectedInput).toStrictEqual(document.activeElement);
@@ -358,6 +366,7 @@ describe('CodonHandler has a few methods that involve the DOM', () => {
     const wrapper = mountAttachedWrapper();
     const span = document.createElement('span');
     const result = () => wrapper.vm.selectedInput(span);
+
     expect(result).toThrow();
     wrapper.destroy();
   });
