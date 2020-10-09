@@ -178,7 +178,7 @@ describe('Test elements generated through Vue v-for directive', () => {
   });
 });
 
-describe.only('Test native events', () => {
+describe('Test native events', () => {
   test('onclick: .base-insert elements set currentlySelectedInput data field', async () => {
     const wrapper = mountAttachedWrapper();
     const insert = wrapper.find('.base-insert');
