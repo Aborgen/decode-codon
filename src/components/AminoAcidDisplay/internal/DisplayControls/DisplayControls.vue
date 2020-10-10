@@ -13,7 +13,7 @@
       class='search-button'>{{ selectedAminoAcid !== null && selectedAminoAcid === searchBoxValue ? 'deselect' : 'select' }}</button>
   </div>
   <div class='display-modify'>
-    <template v-if="selectedAminoAcid !== null" class='amino-acid-modify'>
+    <template v-if="selectedAminoAcid !== null">
       <button
         @click="toggleEditMode"
         id='display-edit'>toggle edit</button>
