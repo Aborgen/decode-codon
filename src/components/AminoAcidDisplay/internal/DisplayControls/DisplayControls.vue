@@ -9,14 +9,17 @@
       min=1
       :max="chainLength"></input>
     <button
-      @click="handleSelectButtonClick">{{ selectedAminoAcid !== null && selectedAminoAcid === searchBoxValue ? 'deselect' : 'select' }}</button>
+      @click="handleSelectButtonClick"
+      class='search-button'>{{ selectedAminoAcid !== null && selectedAminoAcid === searchBoxValue ? 'deselect' : 'select' }}</button>
   </div>
   <div class='display-modify'>
     <template v-if="selectedAminoAcid !== null" class='amino-acid-modify'>
       <button
-        @click="toggleEditMode">toggle edit</button>
+        @click="toggleEditMode"
+        id='display-edit'>toggle edit</button>
       <button
-        @click="deleteCodon">delete</button>
+        @click="deleteCodon"
+        id='display-delete'>delete</button>
     </template>
     <button
       @click="onClearLists"
