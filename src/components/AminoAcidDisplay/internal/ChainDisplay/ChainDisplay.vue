@@ -1,18 +1,18 @@
 <template>
 <section :id="`${chainType}-chain`" class='chain-display'>
-    <ol class='chain-field'>
-      <template v-for="(link, i) in chain">
-        <template v-if="i > 0">{{ separator }}</template>
-        <li :class="{'selected-amino-acid':i === selectedAminoAcid}">{{ link }}</li>
-      </template>
-    </ol>
-    <button
-      @click="copyToClipboard"
-      class='copy-button'>copy</button>
-    <select v-model="separator" name='list separator'>
-      <option v-for="[separator, description] in Object.entries(possibleSeparators)"
-        :value="separator">{{ description }}</option>
-    </select>
+  <ol class='chain-field'>
+    <template v-for="(link, i) in chain">
+      <template v-if="i > 0">{{ separator }}</template>
+      <li :class="{'selected-amino-acid':i === selectedAminoAcid}">{{ link }}</li>
+    </template>
+  </ol>
+  <button
+    @click="copyToClipboard"
+    class='copy-button'>copy</button>
+  <select v-model="separator" name='list separator'>
+    <option v-for="[separator, description] in Object.entries(possibleSeparators)"
+      :value="separator">{{ description }}</option>
+  </select>
 </section>
 </template>
 
