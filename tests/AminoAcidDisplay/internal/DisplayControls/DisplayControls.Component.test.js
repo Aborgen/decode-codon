@@ -1,5 +1,6 @@
 import { initWrapperGenerator, clearDOM } from 'tests/utils.js';
 import DisplayControls from 'components/AminoAcidDisplay/internal/DisplayControls/DisplayControls';
+import Vue from 'vue';
 
 const props = {
   notifyParentDeselectAminoAcid: function() {},
@@ -63,17 +64,274 @@ describe('Reactive attributes', () => {
 
     await wrapper.setProps({ chainLength: n });
     expect(search.attributes('max')).toBe(`${n}`);
+    wrapper.destroy();
   });
 });
 
 describe('Test native events', () => {
-  test('input: #search-box sets searchBoxValue data field to value of #search-box - 1', async () => {
+  test('oninput: #search-box sets searchBoxValue data field to value of #search-box - 1', async () => {
     const n = 1;
     const wrapper = mountAttachedWrapper();
     const search = wrapper.find('#search-box');
-    search.element.value = `${n}`;
+    await search.setValue(`${n}`);
+    expect(search.exists()).toBe(true);
 
     await search.trigger('input');
     expect(wrapper.vm.searchBoxValue).toBe(n-1);
+    wrapper.destroy();
+  });
+
+  test('onkeyup enter: #search-box sets selecedAminoAcid if chainLength > 0 and value <= chainLength', async () => {
+    const n = 1;
+    const wrapper = mountAttachedWrapper();
+    const mockFunc = jest.fn((n) => {
+      Vue.config.silent = true;
+      wrapper.vm.selectedAminoAcid = n;
+      Vue.config.silent = false;
+    });
+
+    const search = wrapper.find('#search-box');
+    await search.setValue(`${n}`);
+    await wrapper.setProps({
+      chainLength: n,
+      notifyParentSelectAminoAcid: mockFunc
+    });
+
+    expect(search.exists()).toBe(true);
+
+    await search.trigger('keyup', { keyCode: 13 /* enter */ });
+    expect(mockFunc).toHaveBeenCalled();
+    expect(wrapper.vm.selectedAminoAcid).toBe(n-1);
+    wrapper.destroy();
+  });
+
+  test('onkeyup enter: #search-box does nothing if chainLength > 0 and value > chainLength', async () => {
+    const n = 2;
+    const wrapper = mountAttachedWrapper();
+    const mockFunc = jest.fn((n) => {
+      Vue.config.silent = true;
+      wrapper.vm.selectedAminoAcid = n;
+      Vue.config.silent = false;
+    });
+
+    const search = wrapper.find('#search-box');
+    await search.setValue(`${n}`);
+    await wrapper.setProps({
+      chainLength: 1,
+      notifyParentSelectAminoAcid: mockFunc
+    });
+
+    expect(search.exists()).toBe(true);
+
+    await search.trigger('keyup', { keyCode: 13 /* enter */ });
+    expect(mockFunc).not.toHaveBeenCalled();
+    expect(wrapper.vm.selectedAminoAcid).toBeNull();
+    wrapper.destroy();
+  });
+
+  test('onkeyup enter: #search-box does nothing if chainLength is 0', async () => {
+    const n = 1;
+    const wrapper = mountAttachedWrapper();
+    const mockFunc = jest.fn((n) => {
+      Vue.config.silent = true;
+      wrapper.vm.selectedAminoAcid = n;
+      Vue.config.silent = false;
+    });
+
+    const search = wrapper.find('#search-box');
+    await search.setValue(`${n}`);
+    await wrapper.setProps({
+      chainLength: 0,
+      notifyParentSelectAminoAcid: mockFunc
+    });
+
+    expect(search.exists()).toBe(true);
+
+    await search.trigger('keyup', { keyCode: 13 /* enter */ });
+    expect(mockFunc).not.toHaveBeenCalled();
+    expect(wrapper.vm.selectedAminoAcid).toBeNull();
+    wrapper.destroy();
+  });
+
+  test('onkeyup enter: #search-box sets value to 0 if chainLength is 0 and value is a number', async () => {
+    const wrapper = mountAttachedWrapper();
+    const search = wrapper.find('#search-box');
+    await search.setValue('5');
+    expect(search.exists()).toBe(true);
+
+    await search.trigger('keyup', { keyCode: 13 /* enter */ });
+    expect(search.element.value).toBe('0');
+    wrapper.destroy();
+  });
+
+  test('onkeyup enter: #search-box sets value to 1 if chainLength > 0 and value is a number less than 1', async () => {
+    const wrapper = mountAttachedWrapper();
+    const search = wrapper.find('#search-box');
+    await search.setValue('0');
+    await wrapper.setProps({ chainLength: 5 });
+    expect(search.exists()).toBe(true);
+
+    await search.trigger('keyup', { keyCode: 13 /* enter */ });
+    expect(search.element.value).toBe('1');
+    wrapper.destroy();
+  });
+
+  test('onkeyup enter: #search-box sets value to chainLength if chainLength > 0 and value is a number greater than chainLength', async () => {
+    const wrapper = mountAttachedWrapper();
+    const search = wrapper.find('#search-box');
+    await search.setValue('10');
+    await wrapper.setProps({ chainLength: 5 });
+    expect(search.exists()).toBe(true);
+
+    await search.trigger('keyup', { keyCode: 13 /* enter */ });
+    expect(search.element.value).toBe('5');
+    wrapper.destroy();
+  });
+
+  test('onclick: .search-button sets selectedAminoAcid if selectedAminoAcid is null', async () => {
+    const n = 1;
+    const wrapper = mountAttachedWrapper();
+    const mockFunc = jest.fn((n) => {
+      Vue.config.silent = true;
+      wrapper.vm.selectedAminoAcid = n;
+      Vue.config.silent = false;
+    });
+
+    const button = wrapper.find('.search-button');
+    const search = wrapper.find('#search-box');
+    await search.setValue(n);
+    await wrapper.setProps({
+      chainLength: n,
+      notifyParentSelectAminoAcid: mockFunc
+    });
+    
+    expect(button.exists()).toBe(true);
+    expect(search.exists()).toBe(true);
+    expect(wrapper.vm.selectedAminoAcid).toBeNull();
+
+    await button.trigger('click');
+    expect(mockFunc).toHaveBeenCalled();
+    expect(wrapper.vm.selectedAminoAcid).toBe(n-1);
+    wrapper.destroy();
+  });
+
+  test('onclick: .search-button sets selectedAminoAcid if selectedAminoAcid is not null and selectedAminoAcid is not searchBoxValue data field', async () => {
+    const n = 1;
+    const wrapper = mountAttachedWrapper();
+    const mockFunc = jest.fn((n) => {
+      Vue.config.silent = true;
+      wrapper.vm.selectedAminoAcid = n;
+      Vue.config.silent = false;
+    });
+
+    const button = wrapper.find('.search-button');
+    const search = wrapper.find('#search-box');
+    await search.setValue(n);
+    await wrapper.setProps({
+      chainLength: 2,
+      notifyParentSelectAminoAcid: mockFunc,
+      selectedAminoAcid: 1
+    });
+
+    expect(button.exists()).toBe(true);
+    expect(search.exists()).toBe(true);
+    
+    await button.trigger('click');
+    expect(mockFunc).toHaveBeenCalled();
+    expect(wrapper.vm.selectedAminoAcid).toBe(n-1);
+    wrapper.destroy();
+  });
+
+  test('onclick: .search-button sets selectedAminoAcid to null if selectedAminoAcid is not null and selectedAminoAcid equals searchBoxValue data field', async () => {
+    const n = 1;
+    const wrapper = mountAttachedWrapper();
+    const mockFunc = jest.fn((n) => {
+      Vue.config.silent = true;
+      wrapper.vm.selectedAminoAcid = null;
+      Vue.config.silent = false;
+    });
+
+    const button = wrapper.find('.search-button');
+    const search = wrapper.find('#search-box');
+    await search.setValue(n);
+    await wrapper.setProps({
+      chainLength: 2,
+      notifyParentDeselectAminoAcid: mockFunc,
+      selectedAminoAcid: n
+    });
+
+    await wrapper.setData({ searchBoxValue: n });
+    expect(button.exists()).toBe(true);
+    expect(search.exists()).toBe(true);
+    
+    await button.trigger('click');
+    expect(mockFunc).toHaveBeenCalled();
+    expect(wrapper.vm.selectedAminoAcid).toBeNull();
+    wrapper.destroy();
+  });
+
+  test('onclick: #display-edit calls prop function if selectedAminoAcid is not null (sets editMode in parent, not available to this component)', async () => {
+    const wrapper = mountAttachedWrapper();
+    const mockFunc = jest.fn();
+    await wrapper.setProps({
+      selectedAminoAcid: 1,
+      notifyParentToggleEditMode: mockFunc
+    });
+
+    const button = wrapper.find('#display-edit');
+    expect(button.exists()).toBe(true);
+    expect(wrapper.vm.editMode).toBeUndefined();
+
+    await button.trigger('click');
+    expect(mockFunc).toHaveBeenCalled();
+    wrapper.destroy();
+  });
+
+  test('onclick: #display-delete calls prop function if user confirms', async () => {
+    const wrapper = mountAttachedWrapper();
+    const spy = jest.spyOn(window, 'confirm').mockImplementation(() => true);
+    const mockFunc = jest.fn();
+    await wrapper.setProps({
+      selectedAminoAcid: 1,
+      onDeleteCodon: mockFunc
+    });
+
+    const button = wrapper.find('#display-delete');
+    expect(button.exists()).toBe(true);
+
+    await button.trigger('click');
+    expect(spy).toHaveBeenCalled();
+    expect(mockFunc).toHaveBeenCalled();
+    wrapper.destroy();
+  });
+
+  test('onclick: #display-delete does nothing if user declines', async () => {
+    const wrapper = mountAttachedWrapper();
+    const spy = jest.spyOn(window, 'confirm').mockImplementation(() => false);
+    const mockFunc = jest.fn();
+    await wrapper.setProps({
+      selectedAminoAcid: 1,
+      onDeleteCodon: mockFunc
+    });
+
+    const button = wrapper.find('#display-delete');
+    expect(button.exists()).toBe(true);
+
+    await button.trigger('click');
+    expect(spy).toHaveBeenCalled();
+    expect(mockFunc).not.toHaveBeenCalled();
+    wrapper.destroy();
+  });
+
+  test('onclick: #display-clear invokes prop function', async () => {
+    const wrapper = mountAttachedWrapper();
+    const mockFunc = jest.fn();
+    await wrapper.setProps({ onClearLists: mockFunc });
+    const button = wrapper.find('#display-clear');
+    expect(button.exists()).toBe(true);
+
+    await button.trigger('click');
+    expect(mockFunc).toHaveBeenCalled();
+    wrapper.destroy();
   });
 });
