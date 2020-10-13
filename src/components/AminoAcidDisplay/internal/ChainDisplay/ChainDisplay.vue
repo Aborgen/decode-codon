@@ -9,7 +9,7 @@
   <button
     @click="copyToClipboard"
     class='copy-button'>copy</button>
-  <select v-model="separator" name='list separator'>
+  <select v-model="separator" class='list-separator'>
     <option v-for="[separator, description] in Object.entries(possibleSeparators)"
       :value="separator">{{ description }}</option>
   </select>
