@@ -150,5 +150,27 @@ html, body {
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
+  margin-top: 0; 
+}
+
+@media (min-width: 330px) {
+  .app-container {
+    margin-top: 0;
+  }
+}
+@media (min-width: 550px) {
+  .app-container {
+    margin-top: 2em;
+  }
+}
+@media (min-width: 992px) {
+  .app-container {
+    margin-top: 4em;
+  }
+}
+@media (min-width: 1200px) {
+  .app-container {
+    margin-top: 3em;
+  }
 }
 </style>
