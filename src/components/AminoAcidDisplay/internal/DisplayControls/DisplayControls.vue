@@ -161,14 +161,9 @@ export default {
 
 <style scoped>
 .display-controls {
-  flex: 0 0 40%;
-  display: flex;
-  width: 60%;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: flex-end;
-  background: green;
   align-self: flex-end;
+  background: green;
+  width: 100%;
 }
 
 .display-search {
@@ -178,11 +173,26 @@ export default {
   justify-content: flex-end;
 }
 
+.display-modify {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 100%;
+}
+
 #search-box {
   width: 4em;
 }
 
 #display-clear {
   
+}
+
+@media (min-width: 992px) {
+  .display-controls {
+    width: 50%;
+    flex-basis: auto;
+  }
 }
 </style>
