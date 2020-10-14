@@ -80,19 +80,16 @@ export default class AminoAcidData {
   }
 
   private insertAminoAcid(i: number, codon: Codon) : void {
-    this.checkIndex(i);
     const aminoAcid = this.translateCodon(codon)
     this.aminoAcidList.splice(i, 0, aminoAcid);
   }
 
   private editAminoAcid(i: number, codon: Codon) : void {
-    this.checkIndex(i);
     const aminoAcid = this.translateCodon(codon)
     this.aminoAcidList.splice(i, 1, aminoAcid);
   }
 
   private deleteAminoAcid(i: number) : void {
-    this.checkIndex(i);
     this.aminoAcidList.splice(i, 1);
   }
 
