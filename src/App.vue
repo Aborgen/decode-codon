@@ -129,9 +129,10 @@ export default {
 
 <style>
 html, body {
-  background: #3571a638;
+  background: #c0d3e3;
   margin: 0;
   padding: 0;
+  font-size: 19px;
 }
 
 .app {
@@ -146,7 +147,7 @@ html, body {
 .app-container {
   flex: 0 0 70%;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
 }

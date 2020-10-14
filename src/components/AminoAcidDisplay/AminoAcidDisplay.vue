@@ -70,13 +70,13 @@ export default {
 <style scoped>
 .amino-acid-container {
   height: 15rem;
-  max-width: 50rem;
+  max-width: 16rem;
   flex: 1 1 50%;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
   justify-content:space-evenly;
-  padding: 2rem;
+  padding: 1%;
 }
 
 .amino-acid-controls {
@@ -92,5 +92,31 @@ export default {
 
 #amino-acid-clear {
   font-size: 0.8em;
+}
+
+@media (min-width: 330px) {
+  .amino-acid-container {
+    max-width: 16rem;
+  }
+}
+@media (min-width: 550px) {
+  .amino-acid-container {
+    max-width: 27rem;
+  }
+}
+@media (min-width: 768px) {
+  .amino-acid-container {
+    max-width: 40rem;
+  }
+}
+@media (min-width: 992px) {
+  .amino-acid-container {
+    max-width: 50rem;
+  }
+}
+@media (min-width: 1200px) {
+  .amino-acid-container {
+    max-width: 50rem;
+  }
 }
 </style>

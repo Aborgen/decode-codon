@@ -96,14 +96,14 @@ export default {
   flex-flow: row nowrap;
   justify-content: space-evenly;
   align-items: center;
-  flex: 0 0 23%;
+  flex: 0 1 23%;
   background: green;
   font-family: monospace;
 }
 
 .chain-field {
   flex: 0 1 70%;
-  display: inline-flex;
+  display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
