@@ -21,9 +21,10 @@ export default class AminoAcidData {
   }
 
   getCodon(i: number) : Codon {
+    this.checkIndex(i);
     const codon:Codon = this.codonList[i];
     if (!validateCodon(codon)) {
-      throw `Codon does not exist at index ${i}: Length === ${this.codonList.length}`;
+      throw `codonList has been corrupted! ${codon}@index=${i}`;
     }
 
     return codon;
@@ -34,6 +35,7 @@ export default class AminoAcidData {
   }
 
   insertCodon(i: number, codon:Codon) : void {
+    this.checkIndex(i);
     if (!validateCodon(codon)) {
       throw `Bad argument passed to method: ${typeof codon}, should be: 'Codon'`;
     }
@@ -43,6 +45,7 @@ export default class AminoAcidData {
   }
 
   setCodon(i: number, codon:Codon) : void {
+    this.checkIndex(i);
     if (!validateCodon(codon)) {
       throw `Bad argument passed to method: ${typeof codon}, should be: 'Codon'`;
     }
@@ -52,10 +55,7 @@ export default class AminoAcidData {
   }
 
   deleteCodon(i: number) : void {
-    if (i < 0 || i > this.codonList.length) {
-      throw `Index ${i} is out of bounds of codonList[length=${this.codonList.length}]`
-    }
-
+    this.checkIndex(i);
     this.codonList.splice(i, 1);
     this.deleteAminoAcid(i);
   }
@@ -66,9 +66,10 @@ export default class AminoAcidData {
   } 
 
   getAminoAcid(i: number) : AminoAcid {
+    this.checkIndex(i);
     const aminoAcid:AminoAcid = this.aminoAcidList[i];
     if (!validateAminoAcid(aminoAcid)) {
-      throw `Amino acid does not exist at index ${i}: ${this.aminoAcidList.length}`;
+      throw `aminoAcidList has been corrupted! ${aminoAcid}@index=${i}`;
     }
 
     return aminoAcid;
@@ -79,20 +80,19 @@ export default class AminoAcidData {
   }
 
   private insertAminoAcid(i: number, codon: Codon) : void {
+    this.checkIndex(i);
     const aminoAcid = this.translateCodon(codon)
     this.aminoAcidList.splice(i, 0, aminoAcid);
   }
 
   private editAminoAcid(i: number, codon: Codon) : void {
+    this.checkIndex(i);
     const aminoAcid = this.translateCodon(codon)
     this.aminoAcidList.splice(i, 1, aminoAcid);
   }
 
   private deleteAminoAcid(i: number) : void {
-    if (i < 0 || i > this.aminoAcidList.length) {
-      throw `Index ${i} is out of bounds of aminoAcidList[length=${this.aminoAcidList.length}]`
-    }
-
+    this.checkIndex(i);
     this.aminoAcidList.splice(i, 1);
   }
 
@@ -124,5 +124,11 @@ export default class AminoAcidData {
 
   length() : number {
     return this.aminoAcidList.length;
+  }
+
+  private checkIndex(i: number): void {
+    if (Number.isNaN(i) || i < 0 || i > this.codonList.length - 1) {
+      throw new RangeError(`Index ${i} is out of bounds [length=${this.codonList.length}]`);
+    }
   }
 }
