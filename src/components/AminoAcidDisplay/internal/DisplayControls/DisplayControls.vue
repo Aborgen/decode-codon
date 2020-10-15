@@ -23,7 +23,8 @@
     </template>
     <button
       @click="onClearLists"
-      id='display-clear'>clear all</button>
+      id='display-clear'>clear
+all</button>
   </div>
 </section>
 </template>
@@ -164,6 +165,13 @@ export default {
   align-self: flex-end;
   background: green;
   width: 100%;
+  padding: 0.5em;
+  box-sizing: border-box;
+  font-size: 0.8em;
+}
+
+.display-controls * {
+  font-size: 1rem;
 }
 
 .display-search {
@@ -177,21 +185,56 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-end;
-  align-items: flex-end;
   width: 100%;
+  margin-top: 0.2em;
+}
+
+.display-modify button {
+  flex: 1 1 33%;
+  padding: 0;
+  margin: 0;
+  word-spacing: 9999999px; /* This is to ensure that the text will break on every word */
 }
 
 #search-box {
-  width: 4em;
+  width: 20%;
+}
+
+.search-button {
+  width: 33%;
+  padding: 0;
+  margin: 0;
 }
 
 #display-clear {
-  
+  max-width: 33%;
 }
-
+/*
+@media (min-width: 330px) {
+  .display-controls * {
+    font-size: 1rem;
+  }
+}
+@media (min-width: 550px) {
+  .display-controls * {
+    font-size: 1rem;
+  }
+}
 @media (min-width: 992px) {
+  .display-controls * {
+    font-size: rem;
+  }
+}
+*/
+@media (min-width: 1200px) {
   .display-controls {
-    width: 50%;
+    width: 60%;
+    flex-basis: auto;
+  }
+}
+@media (min-width: 1700px) {
+  .display-controls {
+    width: 40%;
     flex-basis: auto;
   }
 }
