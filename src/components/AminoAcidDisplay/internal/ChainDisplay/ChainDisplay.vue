@@ -97,7 +97,6 @@ export default {
   justify-content: space-evenly;
   align-items: center;
   flex: 0 1 23%;
-  background: green;
   font-family: monospace;
 }
 

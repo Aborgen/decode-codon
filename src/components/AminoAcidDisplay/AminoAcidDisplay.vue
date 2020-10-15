@@ -79,6 +79,10 @@ export default {
   padding: 1%;
 }
 
+.amino-acid-container > * {
+  background: green;
+}
+
 .amino-acid-controls {
   flex-basis: 40%;
   display: flex;

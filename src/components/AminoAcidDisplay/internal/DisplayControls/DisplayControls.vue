@@ -163,7 +163,6 @@ export default {
 <style scoped>
 .display-controls {
   align-self: flex-end;
-  background: green;
   width: 100%;
   padding: 0.5em;
   box-sizing: border-box;
