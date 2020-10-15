@@ -6,13 +6,15 @@
       <li :class="{'selected-amino-acid':i === selectedAminoAcid}">{{ link }}</li>
     </template>
   </ol>
-  <button
-    @click="copyToClipboard"
-    class='copy-button'>copy</button>
-  <select v-model="separator" class='list-separator'>
-    <option v-for="[separator, description] in Object.entries(possibleSeparators)"
-      :value="separator">{{ description }}</option>
-  </select>
+  <div class='chain-options'>
+    <button
+      @click="copyToClipboard"
+      class='copy-button'>copy</button>
+    <select v-model="separator" class='list-separator'>
+      <option v-for="[separator, description] in Object.entries(possibleSeparators)"
+        :value="separator">{{ description }}</option>
+    </select>
+  </div>
 </section>
 </template>
 
@@ -92,11 +94,11 @@ export default {
 
 <style scoped>
 .chain-display {
+  flex: 0 1 23%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-evenly;
   align-items: center;
-  flex: 0 1 23%;
   font-family: monospace;
 }
 
@@ -122,6 +124,13 @@ export default {
   display: inline;
 }
 
+.chain-options {
+  display: flex;
+  flex-flow: row-nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
 .selected-amino-acid {
   background: orange;
 }
@@ -131,5 +140,17 @@ export default {
   font-size: 0.7em;
   padding: 0;
   margin: 0;
+}
+
+@media (max-width: 550px) {
+  .chain-display {
+    flex-wrap: wrap;
+    flex-basis: 28%;
+  }
+
+  .chain-field {
+    flex-grow: 1;
+    height: 50%;
+  }
 }
 </style>
