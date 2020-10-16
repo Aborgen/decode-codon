@@ -6,7 +6,9 @@
       @keyup.enter="handleKeyboardSelect($event.target)"
       id='search-box'
       type='number'
+      inputmode='decimal'
       min=1
+      placeholder='#'
       :max="chainLength"></input>
     <button
       @click="handleSelectButtonClick"
