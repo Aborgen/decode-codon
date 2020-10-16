@@ -25,8 +25,7 @@
     </template>
     <button
       @click="onClearLists"
-      id='display-clear'>clear
-all</button>
+      id='display-clear'>clear all</button>
   </div>
 </section>
 </template>
