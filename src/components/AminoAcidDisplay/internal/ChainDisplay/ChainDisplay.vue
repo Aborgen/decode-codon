@@ -126,9 +126,7 @@ export default {
 
 .chain-options {
   display: flex;
-  flex-flow: row-nowrap;
-  justify-content: center;
-  align-items: center;
+  flex-flow: row nowrap;
 }
 
 .selected-amino-acid {
@@ -140,6 +138,11 @@ export default {
   font-size: 0.7em;
   padding: 0;
   margin: 0;
+}
+
+.list-separator {
+  flex: 0 1 100%;
+  font-size: 1rem;
 }
 
 @media (max-width: 550px) {
