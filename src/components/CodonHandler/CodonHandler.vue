@@ -16,6 +16,7 @@
       @input="selectBaseByTextInsertion($event.target)"
       :id="'base-'+n"
       :data-base-id="n"
+      :class="{ 'selected-base': currentlySelectedInput && currentlySelectedInput.dataset['baseId'] == n }"
       class='base-insert'
       pattern='[uUcCaAgG]{1}'
       maxlength=1></input>
@@ -453,5 +454,9 @@ export default {
 
 .edit-mode {
   background: #7cff7c9c;
+}
+
+.selected-base {
+  background: #d0e1df;
 }
 </style>
