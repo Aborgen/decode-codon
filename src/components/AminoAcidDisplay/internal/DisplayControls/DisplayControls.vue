@@ -38,10 +38,28 @@ function deleteCodon(this: any) : void {
   }
 }
 
+function handleKeyboardSelect(this: any, target: HTMLInputElement) : void {
+  this.handleSelect(target);
+}
+
+function handleSelectButtonClick(this: any) : void {
+  if (this.selectedAminoAcid !== null && this.selectedAminoAcid === this.searchBoxValue) {
+    this.unsetSelectedAminoAcid();
+  }
+  else {
+    const target = document.getElementById('search-box');
+    this.handleSelect(target);
+  }
+}
+
 // If user inputs a number less than 1 when there is at least one element in chain, then the number is replaced with 1.
 // If user inputs a number > chainLength, it is replaced with chainLength.
-function handleKeyboardSelect(this: any, target: HTMLInputElement) : void {
+function handleSelect(this: any, target: HTMLInputElement) : void {
   if (!(target instanceof HTMLInputElement)) {
+    return;
+  }
+  else if (this.chainLength === 0) {
+    target.value = '';
     return;
   }
 
@@ -58,15 +76,6 @@ function handleKeyboardSelect(this: any, target: HTMLInputElement) : void {
   else if (this.selectedAminoAcid !== Number.parseInt(target.value)-1) {
     this.setSelectedAminoAcid();
     target.blur();
-  }
-}
-
-function handleSelectButtonClick(this: any) : void {
-  if (this.selectedAminoAcid !== null && this.selectedAminoAcid === this.searchBoxValue) {
-    this.unsetSelectedAminoAcid();
-  }
-  else {
-    this.setSelectedAminoAcid();
   }
 }
 
@@ -138,6 +147,7 @@ export default {
   methods: {
     deleteCodon,
     handleKeyboardSelect,
+    handleSelect,
     handleSelectButtonClick,
     setSelectedAminoAcid,
     toggleEditMode,
