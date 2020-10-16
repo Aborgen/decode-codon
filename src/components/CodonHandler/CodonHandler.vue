@@ -54,8 +54,13 @@ enum EMode {
   AUTO
 }
 
+enum EInsert {
+  BUTTON,
+  KEYBOARD
+}
+
 // Keeping track of the currently selected input allows the user to click on an input, and then set its value by clicking one of the buttons
-function selectedInput(this: any, input: HTMLInputElement) : void {
+function selectedInput(this: any, input: HTMLInputElement, insertType: EInsert = EInsert.KEYBOARD) : void {
   if (!(input instanceof HTMLInputElement)) {
     throw 'Can only select input elements!';
   }
@@ -64,8 +69,10 @@ function selectedInput(this: any, input: HTMLInputElement) : void {
   this.lockBaseInputBlur();
   {
     this.currentlySelectedInput = input;
-    input.focus();
-    input.select();
+    if (insertType === EInsert.KEYBOARD) {
+      input.focus();
+      input.select();
+    }
   }
   this.unlockBaseInputBlur();
 }
@@ -192,7 +199,7 @@ function resetInputs(this: any) : void {
   this.maybeResetSelectedInput();
 }
 
-function getNextEmptyInput(this: any) : HTMLInputElement | null {
+function getNextEmptyInput(this: any, insertType: EInsert) : HTMLInputElement | null {
   const inputs:NodeListOf<HTMLInputElement> = document.querySelectorAll('.base-insert');
   if (!inputs) {
     throw 'Either DOM is not loaded, or some structure has changed: Missing input elements with class .base-insert';
@@ -210,7 +217,7 @@ function getNextEmptyInput(this: any) : HTMLInputElement | null {
     this.maybeResetSelectedInput();
   }
   else {
-    this.selectedInput(nextInput);
+    this.selectedInput(nextInput, insertType);
   }
 
   return nextInput;
@@ -248,7 +255,7 @@ function selectBaseByTextInsertion(this: any, target: HTMLInputElement) : void {
     this.maybeSubmitCodon();
   }
 
-  this.getNextEmptyInput();
+  this.getNextEmptyInput(EInsert.KEYBOARD);
 }
 
 function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
@@ -258,7 +265,7 @@ function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
 
   // this.lockBaseInputBlur is invoked during the target button's mousedown events
   this.unlockBaseInputBlur();
-  let nextInput:HTMLInputElement = this.currentlySelectedInput || this.getNextEmptyInput();
+  let nextInput:HTMLInputElement = this.currentlySelectedInput || this.getNextEmptyInput(EInsert.BUTTON);
   if (!nextInput) {
     return;
   }
@@ -269,7 +276,7 @@ function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
     this.maybeSubmitCodon();
   }
 
-  this.getNextEmptyInput();
+  this.getNextEmptyInput(EInsert.BUTTON);
 }
 
 export default {
@@ -375,6 +382,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  touch-action: manipulation;
 }
 
 .base-button {
