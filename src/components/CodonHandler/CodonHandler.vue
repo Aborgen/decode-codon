@@ -204,7 +204,7 @@ function resetState(this: any) : void {
   this.maybeResetSelectedInput();
 }
 
-function getNextEmptyInput(this: any, insertType: EInsert) : HTMLInputElement | null {
+function getNextEmptyInput(this: any) : HTMLInputElement | null {
   const inputs:NodeListOf<HTMLInputElement> = document.querySelectorAll('.base-insert');
   if (!inputs) {
     throw 'Either DOM is not loaded, or some structure has changed: Missing input elements with class .base-insert';
@@ -216,13 +216,6 @@ function getNextEmptyInput(this: any, insertType: EInsert) : HTMLInputElement | 
       nextInput = inputs[i];
       break;
     }
-  }
-
-  if (nextInput === null) {
-    this.maybeResetSelectedInput();
-  }
-  else {
-    this.selectedInput(nextInput, insertType);
   }
 
   return nextInput;
@@ -245,7 +238,7 @@ function selectBaseByTextInsertion(this: any, target: HTMLInputElement) : void {
     return;
   }
   else if (target.validity.patternMismatch) {
-    this.selectedInput(target);
+    this.selectedInput(target, EInsert.KEYBOARD);
     if (typeof target.dataset.baseId === 'string' && this.bases[target.dataset.baseId]) {
       this.bases[target.dataset.baseId] = '';
       this.updateAminoAcids();
@@ -260,7 +253,7 @@ function selectBaseByTextInsertion(this: any, target: HTMLInputElement) : void {
     this.maybeSubmitCodon();
   }
 
-  this.getNextEmptyInput(EInsert.KEYBOARD);
+  this.selectedInput(this.getNextEmptyInput(), EInsert.KEYBOARD);
 }
 
 function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
@@ -270,7 +263,7 @@ function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
 
   // this.lockBaseInputBlur is invoked during the target button's mousedown events
   this.unlockBaseInputBlur();
-  let nextInput:HTMLInputElement = this.currentlySelectedInput || this.getNextEmptyInput(EInsert.BUTTON);
+  let nextInput:HTMLInputElement = this.currentlySelectedInput || this.getNextEmptyInput();
   if (!nextInput) {
     return;
   }
@@ -281,7 +274,7 @@ function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
     this.maybeSubmitCodon();
   }
 
-  this.getNextEmptyInput(EInsert.BUTTON);
+  this.selectedInput(this.getNextEmptyInput(), EInsert.BUTTON);
 }
 
 export default {
