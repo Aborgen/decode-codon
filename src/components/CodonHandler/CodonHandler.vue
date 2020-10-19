@@ -39,7 +39,7 @@
         :disabled="editMode"
         class='codon-mode-toggle'>auto</button>
       <button
-        @click="resetInputs"
+        @click="resetState"
         class='codon-clear'>x</button>
     </div>
   </section>
@@ -138,7 +138,7 @@ function maybeSubmitCodon(this: any) : void {
   }
 
   this.onCodonSubmit(codon);
-  this.resetInputs();
+  this.resetState();
 } 
 
 function editCodon(this: any) : void {
@@ -152,7 +152,7 @@ function editCodon(this: any) : void {
   }
 
   this.onCodonEdit(codon);
-  this.resetInputs();
+  this.resetState();
   this.notifyParentToggleEditMode();
 }
 
@@ -185,7 +185,7 @@ function updateAminoAcids(this: any) : void {
   this.possibleAminoAcids = CodonTable[idx][bases];
 }
 
-function resetInputs(this: any) : void {
+function resetState(this: any) : void {
   const inputs:NodeListOf<HTMLInputElement> = document.querySelectorAll('.base-insert');
   inputs.forEach((input:HTMLInputElement) => {
     input.value = '';
@@ -304,7 +304,7 @@ export default {
     maybeSubmitCodon,
     pushBase,
     maybeResetSelectedInput,
-    resetInputs,
+    resetState,
     selectBaseByButton,
     selectBaseByTextInsertion,
     selectedInput,
