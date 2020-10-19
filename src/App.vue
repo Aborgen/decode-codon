@@ -135,6 +135,13 @@ html, body {
   font-size: 19px;
 }
 
+button {
+  -webkit-appearance: none;
+  -webkit-border-radius: none;
+  border-radius: 0.2em;
+  background: #fff;
+}
+
 .app {
   display: flex;
   justify-content: center;
