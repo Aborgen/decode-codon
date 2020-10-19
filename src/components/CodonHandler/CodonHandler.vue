@@ -80,6 +80,7 @@ function selectedInput(this: any, input: HTMLInputElement, insertType: EInsert =
     }
   }
   this.unlockBaseInputBlur();
+  this.previousInsertType = insertType;
 }
 
 function lockBaseInputBlur(this: any) : void {
@@ -91,14 +92,13 @@ function unlockBaseInputBlur(this: any) : void {
 }
 
 function maybeResetSelectedInput(this: any) : void {
-  if (this.blurLocked || this.currentlySelectedInput === null) {
+  if (this.blurLocked) {
     return;
   }
 
   this.lockBaseInputBlur();
   {
-    this.currentlySelectedInput.blur();
-    this.currentlySelectedInput = null;
+    this.setSelectedInput(this.getNextEmptyInput(), this.previousInsertType);
   }
   this.unlockBaseInputBlur();
 }
@@ -296,7 +296,8 @@ export default {
       blurLocked: false,
       currentlySelectedInput: null,
       mode: EMode.MANUAL,
-      possibleAminoAcids: []
+      possibleAminoAcids: [],
+      previousInsertType: EInsert.KEYBOARD
     };
   },
   methods: {
