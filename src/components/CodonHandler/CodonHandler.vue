@@ -62,6 +62,7 @@ enum EInsert {
 
 // Keeping track of the currently selected input allows the user to click on an input, and then set its value by clicking one of the buttons
 function setSelectedInput(this: any, input: HTMLInputElement | null, insertType: EInsert = EInsert.KEYBOARD) : void {
+  this.previousInsertType = insertType;
   if (input === null) {
     this.currentlySelectedInput = input;
     return;
@@ -80,7 +81,6 @@ function setSelectedInput(this: any, input: HTMLInputElement | null, insertType:
     }
   }
   this.unlockBaseInputBlur();
-  this.previousInsertType = insertType;
 }
 
 function lockBaseInputBlur(this: any) : void {
