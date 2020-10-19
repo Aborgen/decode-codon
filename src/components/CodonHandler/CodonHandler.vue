@@ -98,7 +98,7 @@ function maybeResetSelectedInput(this: any) : void {
 
   this.lockBaseInputBlur();
   {
-    this.setSelectedInput(this.getNextEmptyInput(), this.previousInsertType);
+    this.selectedInput(this.getNextEmptyInput(), this.previousInsertType);
   }
   this.unlockBaseInputBlur();
 }
