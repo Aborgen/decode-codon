@@ -11,7 +11,7 @@
   </section>
   <section class='base-display'>
     <input required v-for="n in 3"
-      @click="selectedInput($event.target)"
+      @click="setSelectedInput($event.target)"
       @blur="maybeResetSelectedInput"
       @input="selectBaseByTextInsertion($event.target)"
       :id="'base-'+n"
@@ -61,7 +61,7 @@ enum EInsert {
 }
 
 // Keeping track of the currently selected input allows the user to click on an input, and then set its value by clicking one of the buttons
-function selectedInput(this: any, input: HTMLInputElement | null, insertType: EInsert = EInsert.KEYBOARD) : void {
+function setSelectedInput(this: any, input: HTMLInputElement | null, insertType: EInsert = EInsert.KEYBOARD) : void {
   if (input === null) {
     this.currentlySelectedInput = input;
     return;
@@ -98,7 +98,7 @@ function maybeResetSelectedInput(this: any) : void {
 
   this.lockBaseInputBlur();
   {
-    this.selectedInput(this.getNextEmptyInput(), this.previousInsertType);
+    this.setSelectedInput(this.getNextEmptyInput(), this.previousInsertType);
   }
   this.unlockBaseInputBlur();
 }
@@ -238,7 +238,7 @@ function selectBaseByTextInsertion(this: any, target: HTMLInputElement) : void {
     return;
   }
   else if (target.validity.patternMismatch) {
-    this.selectedInput(target, EInsert.KEYBOARD);
+    this.setSelectedInput(target, EInsert.KEYBOARD);
     if (typeof target.dataset.baseId === 'string' && this.bases[target.dataset.baseId]) {
       this.bases[target.dataset.baseId] = '';
       this.updateAminoAcids();
@@ -253,7 +253,7 @@ function selectBaseByTextInsertion(this: any, target: HTMLInputElement) : void {
     this.maybeSubmitCodon();
   }
 
-  this.selectedInput(this.getNextEmptyInput(), EInsert.KEYBOARD);
+  this.setSelectedInput(this.getNextEmptyInput(), EInsert.KEYBOARD);
 }
 
 function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
@@ -274,7 +274,7 @@ function selectBaseByButton (this: any, target: HTMLButtonElement) : void {
     this.maybeSubmitCodon();
   }
 
-  this.selectedInput(this.getNextEmptyInput(), EInsert.BUTTON);
+  this.setSelectedInput(this.getNextEmptyInput(), EInsert.BUTTON);
 }
 
 export default {
@@ -305,7 +305,7 @@ export default {
     resetState,
     selectBaseByButton,
     selectBaseByTextInsertion,
-    selectedInput,
+    setSelectedInput,
     toggleMode,
     unlockBaseInputBlur,
     updateAminoAcids,
