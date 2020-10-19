@@ -62,7 +62,11 @@ enum EInsert {
 
 // Keeping track of the currently selected input allows the user to click on an input, and then set its value by clicking one of the buttons
 function selectedInput(this: any, input: HTMLInputElement, insertType: EInsert = EInsert.KEYBOARD) : void {
-  if (!(input instanceof HTMLInputElement)) {
+  if (input === null) {
+    this.currentlySelectedInput = input;
+    return;
+  }
+  else if (!(input instanceof HTMLInputElement)) {
     throw 'Can only select input elements!';
   }
 
