@@ -391,6 +391,7 @@ export default {
   line-height: 4rem;
   padding: 0;
   font-size: 2rem;
+  border-radius: 0.09em;
 }
 
 .base-options-group {
