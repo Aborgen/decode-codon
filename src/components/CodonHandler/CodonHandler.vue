@@ -358,22 +358,29 @@ export default {
 .base-insert {
   height: 3rem;
   width: 3rem;
-  background: #3571a614;
+  background: #9dbfdd;
   font-size: inherit;
   text-align: center;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.base-insert:valid {
+  border: 3px solid #000;
+}
+.base-insert:invalid {
+  border: 2px solid #ae0736;
+  box-shadow: none; /* Firefox adds default styling here */
 }
 
 .base-action {
+  background: #9dbfdd;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
   justify-content: space-around;
-  background: #3571a638;
   margin-top: 1rem;
-  border-width: 0 0.5rem;
-  border-style: ridge;
-  border-color: #b3dbff;
-  border-radius: 0.1rem;
   box-sizing: border-box;
 }
 
@@ -403,6 +410,7 @@ export default {
 .base-options-group button {
   height: 3rem;
   width: 6rem;
+  font-size: 1rem;
 }
 
 .codon-commit {}
@@ -410,11 +418,11 @@ export default {
 .codon-mode-toggle {}
 
 .codon-clear {
-  height: 2rem !important;
-  width: 3rem !important;
+  width: 2rem !important;
   text-align: center;
   font-size: 0.7em;
-  padding: 0;
+  padding: 0.3em;
+  font-weight: bold;
 }
 
 .codon-mode-auto {

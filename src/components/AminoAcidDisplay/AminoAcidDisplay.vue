@@ -80,7 +80,8 @@ export default {
 }
 
 .amino-acid-container > * {
-  background: green;
+  background: #407772;
+  box-shadow: 7px 4px 5px -2px #4d3a3a59;
 }
 
 .amino-acid-controls {
