@@ -3,7 +3,10 @@
   <ol class='chain-field'>
     <template v-for="(link, i) in chain">
       <template v-if="i > 0">{{ separator }}</template>
-      <li :class="{'selected-amino-acid':i === selectedAminoAcid}">{{ link }}</li>
+      <li :class="{'selected-amino-acid':i === selectedAminoAcid}">
+        <div class='chain-index'>{{ i+1 }}</div>
+        {{ link }}
+      </li>
     </template>
   </ol>
   <div class='chain-options'>
@@ -107,7 +110,7 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
   background: #fff;
   height: 80%;
   border: 2px inset black;
@@ -116,11 +119,21 @@ export default {
   padding: 0;
   margin: 0;
   overflow-x: scroll;
+  overflow-y: hidden;
   list-style-type: none;
 }
 
 .chain-field li {
-  display: inline;
+  position: relative;
+}
+
+.chain-index {
+  color: #825f5f9c;
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
+  font-size: 0.5em;
+  text-align: center;
 }
 
 .chain-options {
