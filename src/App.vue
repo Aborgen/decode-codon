@@ -140,6 +140,7 @@ button {
   -webkit-border-radius: none;
   border-radius: 0.2em;
   background: #fff;
+  user-select: none;
 }
 
 .app {
@@ -152,8 +153,8 @@ button {
 }
 
 .app-container {
-  flex: 0 0 70%;
   display: flex;
+  width: 100%;
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
@@ -180,4 +181,32 @@ button {
     margin-top: 3em;
   }
 }
+
+/*
+@media (min-width: 330px) {
+  .amino-acid-container {
+    max-width: 16rem;
+  }
+}
+@media (min-width: 550px) {
+  .amino-acid-container {
+    max-width: 27rem;
+  }
+}
+@media (min-width: 768px) {
+  .amino-acid-container {
+    max-width: 40rem;
+  }
+}
+@media (min-width: 992px) {
+  .amino-acid-container {
+    max-width: 50rem;
+  }
+}
+@media (min-width: 1200px) {
+  .amino-acid-container {
+    width: 50%;
+  }
+}
+*/
 </style>

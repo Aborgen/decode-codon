@@ -219,24 +219,8 @@ export default {
 #display-clear {
   max-width: 33%;
 }
-/*
-@media (min-width: 330px) {
-  .display-controls * {
-    font-size: 1rem;
-  }
-}
-@media (min-width: 550px) {
-  .display-controls * {
-    font-size: 1rem;
-  }
-}
-@media (min-width: 992px) {
-  .display-controls * {
-    font-size: rem;
-  }
-}
-*/
-@media (min-width: 1200px) {
+
+@media (min-width: 768px) {
   .display-controls {
     width: 60%;
     flex-basis: auto;

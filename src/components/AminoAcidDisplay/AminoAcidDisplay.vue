@@ -71,7 +71,6 @@ export default {
 .amino-acid-container {
   height: 15rem;
   max-width: 16rem;
-  flex: 1 1 50%;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
@@ -99,11 +98,7 @@ export default {
   font-size: 0.8em;
 }
 
-@media (min-width: 330px) {
-  .amino-acid-container {
-    max-width: 16rem;
-  }
-}
+
 @media (min-width: 550px) {
   .amino-acid-container {
     max-width: 27rem;
@@ -121,7 +116,8 @@ export default {
 }
 @media (min-width: 1200px) {
   .amino-acid-container {
-    max-width: 50rem;
+    width: 50%;
   }
 }
+
 </style>

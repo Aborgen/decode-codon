@@ -1,5 +1,4 @@
-<template>
-<div 
+<template> <div 
   :class="{'edit-mode': editMode}"
   class='codon-handler'>
   <header class='codon-instruction'>{{ editMode ? 'Edit Codon' : 'Codon Insertion' }}</header>
@@ -412,10 +411,6 @@ export default {
   width: 6rem;
   font-size: 1rem;
 }
-
-.codon-commit {}
-
-.codon-mode-toggle {}
 
 .codon-clear {
   width: 2rem !important;

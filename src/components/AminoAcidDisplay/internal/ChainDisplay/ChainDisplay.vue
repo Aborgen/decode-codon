@@ -115,7 +115,6 @@ export default {
   font-size: 0.7em;
   padding: 0;
   margin: 0;
-  white-space: nowrap;
   overflow-x: scroll;
   list-style-type: none;
 }
@@ -145,7 +144,7 @@ export default {
   font-size: 1rem;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 768px) {
   .chain-display {
     flex-wrap: wrap;
     flex-basis: 28%;
