@@ -422,8 +422,8 @@ export default {
 }
 
 .codon-mode-auto {
-  background: grey;
-  border: 3px double #eaff85;
+  background: #524f60ad;
+  border: 2px double #fbe63a;
 }
 
 .amino-acid-choices {
