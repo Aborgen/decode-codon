@@ -31,6 +31,7 @@
     <div class='base-options-group'>
       <button
         @click="editMode ? editCodon() : maybeSubmitCodon()"
+        :disabled="isModeAuto()"
         class='codon-commit'>commit</button>
       <button
         @click="toggleMode"
