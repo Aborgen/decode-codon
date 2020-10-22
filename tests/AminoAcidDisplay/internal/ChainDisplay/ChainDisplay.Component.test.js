@@ -64,7 +64,12 @@ describe('Nodes generated using the v-for directive', () => {
 
     const children = wrapper.findAll('.chain-field > *');
     expect(children.length).toEqual(3);
-    children.wrappers.forEach((child, i) => expect(child.text()).toBe(chain[i]))
+    children.wrappers.forEach((child, i) => {
+      const [superscript, textNode] = child.element.childNodes;
+      expect(superscript.textContent).toBe(String(i+1));
+      expect(textNode.textContent.trim()).toBe(chain[i]);
+    });
+
     wrapper.destroy();
   });
 
