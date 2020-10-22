@@ -141,6 +141,9 @@ button {
   border-radius: 0.2em;
   background: #fff;
   user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .app {
