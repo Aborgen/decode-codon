@@ -153,14 +153,14 @@ describe('Test native events', () => {
     wrapper.destroy();
   });
 
-  test('onkeyup enter: #search-box sets value to 0 if chainLength is 0 and value is a number', async () => {
+  test('onkeyup enter: #search-box sets value to an empty string if chainLength is 0 and value is a number', async () => {
     const wrapper = mountAttachedWrapper();
     const search = wrapper.find('#search-box');
     await search.setValue('5');
     expect(search.exists()).toBe(true);
 
     await search.trigger('keyup', { keyCode: 13 /* enter */ });
-    expect(search.element.value).toBe('0');
+    expect(search.element.value).toBe('');
     wrapper.destroy();
   });
 

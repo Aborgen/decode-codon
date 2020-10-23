@@ -32,10 +32,11 @@ describe('DisplayControls has several private methods available to it, most invo
     expect(mockFunction).not.toHaveBeenCalled();
   });
 
-  test('handleKeyboardSelect will replace selected input\'s number with 1 if user inputs a number less than 1', () => {
+  test('handleKeyboardSelect will replace selected input\'s number with 1 if user inputs a number less than 1 and chainLength > 0', async () => {
     const wrapper = mountWrapper();
     const mockFunction = jest.fn();
     const input = document.createElement('input');
+    await wrapper.setProps({ chainLength: 1 });
     input.setAttribute('type', 'number');
     input.setAttribute('min', 1);
     input.setAttribute('max', 10);
@@ -46,10 +47,26 @@ describe('DisplayControls has several private methods available to it, most invo
     expect(mockFunction).toHaveBeenCalled();
   });
 
-  test('handleKeyboardSelect will replace selected input\'s number with n if user inputs a number greater than n', () => {
+  test('handleKeyboardSelect will replace selected input\'s number with an empty string if chainLength === 0', async () => {
     const wrapper = mountWrapper();
     const mockFunction = jest.fn();
     const input = document.createElement('input');
+    await wrapper.setProps({ chainLength: 0 });
+    input.setAttribute('type', 'number');
+    input.setAttribute('min', 1);
+    input.setAttribute('max', 10);
+    input.value = '-1';
+    input.addEventListener('input', mockFunction);
+    wrapper.vm.handleKeyboardSelect(input);
+    expect(input.value).toBe('');
+    expect(mockFunction).not.toHaveBeenCalled();
+  });
+
+  test('handleKeyboardSelect will replace selected input\'s number with n if user inputs a number greater than n and chainLength > 0', async () => {
+    const wrapper = mountWrapper();
+    const mockFunction = jest.fn();
+    const input = document.createElement('input');
+    await wrapper.setProps({ chainLength: 1 });
     input.setAttribute('type', 'number');
     input.setAttribute('min', 1);
     input.setAttribute('max', 10);
@@ -60,7 +77,7 @@ describe('DisplayControls has several private methods available to it, most invo
     expect(mockFunction).toHaveBeenCalled();
   });
 
-  test('handleKeyboardSelect will set selectedAminoAcid if (user\'s input - 1) !== selectedAminoAcid', async () => {
+  test('handleKeyboardSelect will set selectedAminoAcid if (user\'s input - 1) !== selectedAminoAcid and chainLength > 0', async () => {
     const wrapper = mountWrapper();
     const mockFunction = jest.fn();
     // If I use wrapper.setProps, the test hangs
@@ -70,7 +87,11 @@ describe('DisplayControls has several private methods available to it, most invo
       Vue.config.silent = false;
     });
 
-    await wrapper.setProps({ selectedAminoAcid: 0 });
+    await wrapper.setProps({
+      selectedAminoAcid: 0,
+      chainLength: 1
+    });
+
     wrapper.vm.setSelectedAminoAcid = mockFunction;
 
     const input = document.createElement('input');
@@ -102,26 +123,27 @@ describe('DisplayControls has several private methods available to it, most invo
     expect(mockBlur).not.toHaveBeenCalled();
   });
 
-  test('handleSelectButtonClick will invoke setSelectedAminoAcid if selectedAminoAcid is null', () => {
+  test('handleSelectButtonClick will invoke setSelectedAminoAcid if selectedAminoAcid is null and chainLength > 0', () => {
     const mockSelectFunction = jest.fn();
     const mockUnselectFunction = jest.fn();
     const wrapper = mountWrapper();
     expect(wrapper.vm.selectedAminoAcid).toBeNull();
 
-    wrapper.vm.setSelectedAminoAcid = mockSelectFunction;
+    wrapper.vm.handleSelect = mockSelectFunction;
     wrapper.vm.unsetSelectedAminoAcid = mockUnselectFunction;
     wrapper.vm.handleSelectButtonClick();
     expect(mockSelectFunction).toHaveBeenCalled();
     expect(mockUnselectFunction).not.toHaveBeenCalled();
   });
 
-  test('handleSelectButtonClick will invoke setSelectedAminoAcid if selectedAminoAcid is not null and is different from searchBoxValue', async () => {
+  test('handleSelectButtonClick will invoke handleSelect if selectedAminoAcid is not null and is different from searchBoxValue', async () => {
     const mockSelectFunction = jest.fn();
     const mockUnselectFunction = jest.fn();
     const wrapper = mountWrapper();
     await wrapper.setProps({ selectedAminoAcid: 1 });
-    wrapper.vm.searchBoxValue = 0;
-    wrapper.vm.setSelectedAminoAcid = mockSelectFunction;
+
+    wrapper.vm.searchBoxValue = 2;
+    wrapper.vm.handleSelect = mockSelectFunction;
     wrapper.vm.unsetSelectedAminoAcid = mockUnselectFunction;
     wrapper.vm.handleSelectButtonClick();
     expect(mockSelectFunction).toHaveBeenCalled();
@@ -134,7 +156,7 @@ describe('DisplayControls has several private methods available to it, most invo
     const wrapper = mountWrapper();
     await wrapper.setProps({ selectedAminoAcid: 0 });
     wrapper.vm.searchBoxValue = 0;
-    wrapper.vm.setSelectedAminoAcid = mockSelectFunction;
+    wrapper.vm.handleSelect = mockSelectFunction;
     wrapper.vm.unsetSelectedAminoAcid = mockUnselectFunction;
     wrapper.vm.handleSelectButtonClick();
     expect(mockSelectFunction).not.toHaveBeenCalled();
