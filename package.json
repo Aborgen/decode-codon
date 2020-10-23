@@ -31,8 +31,8 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "webpack",
-    "dev": "webpack-dev-server",
+    "build": "webpack --config webpack.prod.js",
+    "dev": "webpack-dev-server --config webpack.dev.js",
     "deploy": "npm run build && echo http://decodecodon.com > dist/CNAME && surge dist/"
   },
   "keywords": [],
