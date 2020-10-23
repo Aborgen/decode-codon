@@ -61,7 +61,7 @@ describe('CodonHandler has several private methods available to it, most involve
     expect(wrapper.vm.currentlySelectedInput).toBe('');
   });
 
-  test('resetInputs sets base data inputs to empty strings, possibleAminoAcids to an empty array, and currentlySelectedInput to null', () => {
+  test('resetState sets base data inputs to empty strings, possibleAminoAcids to an empty array, and currentlySelectedInput to null', () => {
     const wrapper = mountAttachedWrapper();
     wrapper.vm.bases['1'] = 'U';
     wrapper.vm.bases['2'] = 'U';
@@ -69,7 +69,7 @@ describe('CodonHandler has several private methods available to it, most involve
     wrapper.vm.currentlySelectedInput = document.createElement('input');
     wrapper.vm.possibleAminoAcids = [''];
 
-    wrapper.vm.resetInputs();
+    wrapper.vm.resetState();
     expect(wrapper.vm.bases).toStrictEqual({'1': '', '2': '', '3': ''});
     expect(wrapper.vm.currentlySelectedInput).toBeNull();
     expect(wrapper.vm.possibleAminoAcids).toStrictEqual([]);
@@ -351,21 +351,21 @@ describe('CodonHandler has a few methods that involve the DOM', () => {
     wrapper.destroy();
   });
 
-  test('selectedInput sets currentlySelectedElement, and has browser select it', () => {
+  test('setSelectedInput sets currentlySelectedElement, and has browser select it', () => {
     const wrapper = mountAttachedWrapper();
     const input = document.createElement('input');
     document.body.appendChild(input);
 
-    wrapper.vm.selectedInput(input);
+    wrapper.vm.setSelectedInput(input);
     expect(wrapper.vm.currentlySelectedInput).toStrictEqual(input);
     expect(wrapper.vm.currentlySelectedInput).toStrictEqual(document.activeElement);
     wrapper.destroy();
   });
 
-  test('selectedInput throws if anything other than an HTMLInputElement is given to it', () => {
+  test('setSelectedInput throws if anything other than an HTMLInputElement is given to it', () => {
     const wrapper = mountAttachedWrapper();
     const span = document.createElement('span');
-    const result = () => wrapper.vm.selectedInput(span);
+    const result = () => wrapper.vm.setSelectedInput(span);
 
     expect(result).toThrow();
     wrapper.destroy();
