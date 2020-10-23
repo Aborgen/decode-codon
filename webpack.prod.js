@@ -16,6 +16,9 @@ module.exports = merge(common, {
           ]
         }
       })
-    ]
+    ],
+    splitChunks: {
+      name: false
+    }
   }
 });
