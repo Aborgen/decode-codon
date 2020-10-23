@@ -189,13 +189,23 @@ describe('Test native events', () => {
     wrapper.destroy();
   });
 
-  test('onblur: .base-insert elements set currentlySelectedInput to null', async () => {
+  test('onblur: .base-insert elements set currentlySelectedInput to the next empty input', async () => {
     const wrapper = mountAttachedWrapper();
-    const insert = wrapper.find('.base-insert');
-    expect(insert.exists()).toBe(true);
-    wrapper.vm.currentlySelectedInput = insert.element;
+    const inserts = wrapper.findAll('.base-insert');
+    expect(inserts.length).toBeGreaterThan(0);
 
-    await insert.trigger('blur');
+    await inserts.at(0).trigger('blur');
+    expect(wrapper.vm.currentlySelectedInput).toBe(inserts.at(0).element);
+    wrapper.destroy();
+  });
+
+  test('onblur: .base-insert elements set currentlySelectedInput to null if all input elements are filled', async () => {
+    const wrapper = mountAttachedWrapper();
+    const inserts = wrapper.findAll('.base-insert');
+    expect(inserts.length).toBeGreaterThan(0);
+    await inserts.setValue('U');
+
+    await inserts.at(0).trigger('blur');
     expect(wrapper.vm.currentlySelectedInput).toBeNull();
     wrapper.destroy();
   });
@@ -290,7 +300,7 @@ describe('Test native events', () => {
     await button.trigger('click');
     expect(wrapper.vm.possibleAminoAcids).toStrictEqual([]);
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
-    expect(wrapper.vm.currentlySelectedInput).toBeNull();
+    expect(wrapper.vm.currentlySelectedInput).toBe(inserts.at(0).element);
     wrapper.destroy();
   });
 
@@ -353,7 +363,7 @@ describe('Test native events', () => {
     await button.trigger('click');
     expect(wrapper.vm.possibleAminoAcids).toStrictEqual([]);
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
-    expect(wrapper.vm.currentlySelectedInput).toBeNull();
+    expect(wrapper.vm.currentlySelectedInput).toBe(inserts.at(0).element);
     wrapper.destroy();
   });
 
@@ -413,7 +423,7 @@ describe('Test native events', () => {
     expect(wrapper.vm.mode).toEqual(1);
     expect(wrapper.vm.possibleAminoAcids).toStrictEqual([]);
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
-    expect(wrapper.vm.currentlySelectedInput).toBeNull();
+    expect(wrapper.vm.currentlySelectedInput).toBe(inserts.at(0).element);
     wrapper.destroy();
   });
 
@@ -432,7 +442,7 @@ describe('Test native events', () => {
     await button.trigger('click');
     expect(wrapper.vm.possibleAminoAcids).toStrictEqual([]);
     expect(wrapper.vm.bases).toStrictEqual({ '1': '', '2': '', '3': '' });
-    expect(wrapper.vm.currentlySelectedInput).toBeNull();
+    expect(wrapper.vm.currentlySelectedInput).toBe(inserts.at(0).element);
     wrapper.destroy();
   });
 });

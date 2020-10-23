@@ -71,7 +71,7 @@ describe('CodonHandler has several private methods available to it, most involve
 
     wrapper.vm.resetState();
     expect(wrapper.vm.bases).toStrictEqual({'1': '', '2': '', '3': ''});
-    expect(wrapper.vm.currentlySelectedInput).toBeNull();
+    expect(wrapper.vm.currentlySelectedInput).toBe(wrapper.findAll('.base-insert').at(0).element);
     expect(wrapper.vm.possibleAminoAcids).toStrictEqual([]);
     wrapper.destroy();
   });
@@ -225,22 +225,19 @@ describe('CodonHandler has a few methods that involve the DOM', () => {
     bases.at(0).element.value = 'U';
 
     const result = wrapper.vm.getNextEmptyInput();
-    expect(wrapper.vm.currentlySelectedInput).toStrictEqual(bases.at(1).element);
     expect(result).toStrictEqual(bases.at(1).element);
     wrapper.destroy();
   });
 
-  test('getNextEmptyInput returns null if there are no empty HTMLInputElements and sets currentlySelectedInput to null', () => {
+  test('getNextEmptyInput returns null if there are no empty HTMLInputElements', () => {
     const wrapper = mountAttachedWrapper();
     const bases = wrapper.findAll('.base-insert');
-    wrapper.vm.currentlySelectedInput = bases.at(0).element;
     bases.at(0).element.value = 'U';
     bases.at(1).element.value = 'U';
     bases.at(2).element.value = 'U';
 
     const result = wrapper.vm.getNextEmptyInput();
     expect(result).toBeNull();
-    expect(wrapper.vm.currentlySelectedInput).toBeNull();
     wrapper.destroy();
   });
 
