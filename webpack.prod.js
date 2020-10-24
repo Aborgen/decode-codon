@@ -1,4 +1,5 @@
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
 
@@ -15,10 +16,16 @@ module.exports = merge(common, {
             'default', { discardComments: { removeAll: true } }
           ]
         }
+      }),
+      new TerserPlugin({
+        terserOptions: {
+          parallel: true,
+          output: {
+            comments: false
+          }
+        },
+        extractComments: false
       })
-    ],
-    splitChunks: {
-      name: false
-    }
+    ]
   }
 });

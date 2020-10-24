@@ -48,7 +48,7 @@
 
 <script lang='ts'>
 import { Codon } from 'types/Codon.ts';
-import CodonTable from 'data/CodonTable';
+import CodonTable from 'data/CodonTable.js';
 
 enum EMode {
   MANUAL,

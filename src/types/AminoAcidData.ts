@@ -1,6 +1,6 @@
 import { AminoAcid, validateAminoAcid } from './AminoAcid.ts';
 import { Codon, validateCodon } from './Codon.ts';
-import CodonTable from 'data/CodonTable';
+import CodonTable from 'data/CodonTable.js';
 
 export default class AminoAcidData {
   private aminoAcidList: AminoAcid[];
