@@ -71,6 +71,23 @@ describe('CodonHandler\'s appearance changes depending on editMode prop', () => 
     wrapper.destroy();
   });
 
+  test('Submit button\'s click event will attempt to submit a codon if editMode is false', async () => {
+    const wrapper = mountAttachedWrapper();
+    const mockSubmit = jest.fn();
+    const mockEdit = jest.fn();
+    wrapper.vm.maybeSubmitCodon = mockSubmit;
+    wrapper.vm.editCodon = mockEdit;
+    expect(wrapper.vm.editMode).toBe(false);
+
+    const button = wrapper.find('.codon-commit');
+    expect(button.exists()).toBe(true);
+    expect(button.element.tagName.toLowerCase()).toBe('button');
+    await button.trigger('click');
+    expect(mockSubmit).toHaveBeenCalled();
+    expect(mockEdit).not.toHaveBeenCalled();
+    wrapper.destroy();
+  });
+
   test('Submit button\'s click event will involve editing a codon if editMode is false', async () => {
     const wrapper = mountAttachedWrapper();
     const mockSubmit = jest.fn();
@@ -85,6 +102,28 @@ describe('CodonHandler\'s appearance changes depending on editMode prop', () => 
     await button.trigger('click');
     expect(mockSubmit).not.toHaveBeenCalled();
     expect(mockEdit).toHaveBeenCalled();
+    wrapper.destroy();
+  });
+
+  test.only('Submit button is disabled if mode is AUTO', async () => {
+    const wrapper = mountAttachedWrapper();
+    await wrapper.setData({ mode: 1 });
+
+    const button = wrapper.find('.codon-commit');
+    expect(button.exists()).toBe(true);
+    expect(button.element.tagName.toLowerCase()).toBe('button');
+    expect(button.attributes('disabled')).toBeTruthy();
+    wrapper.destroy();
+  });
+
+  test.only('Submit button is enabled if mode is MANUAL', async () => {
+    const wrapper = mountAttachedWrapper();
+    expect(wrapper.vm.mode).toBe(0);
+
+    const button = wrapper.find('.codon-commit');
+    expect(button.exists()).toBe(true);
+    expect(button.element.tagName.toLowerCase()).toBe('button');
+    expect(button.attributes('disabled')).toBeFalsy();
     wrapper.destroy();
   });
 
