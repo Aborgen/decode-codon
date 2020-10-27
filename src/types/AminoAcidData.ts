@@ -5,6 +5,7 @@ import CodonTable from 'data/CodonTable.js';
 export default class AminoAcidData {
   private aminoAcidList: AminoAcid[];
   private codonList: Codon[];
+  MAX_CODONS = 9999 // Anything more than that looks bad in the superscript index above the codon!
 
   constructor() {
     this.aminoAcidList = [];
@@ -14,6 +15,9 @@ export default class AminoAcidData {
   pushCodon(codon: Codon) : void {
     if (!validateCodon(codon)) {
       throw `Bad argument passed to method: ${typeof codon}, should be: 'Codon'`;
+    }
+    else if (this.codonList.length === this.MAX_CODONS) {
+      throw `Cannot store any more codons. Max size: ${this.MAX_CODONS}`;
     }
 
     this.codonList.push(codon);
