@@ -2,6 +2,7 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/main.ts',
@@ -47,6 +48,11 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: 'style.css'
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, 'src/static/favicon') }
+      ]
     })
   ]
 };
